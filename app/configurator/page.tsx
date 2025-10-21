@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { FormProvider, useForm } from "react-hook-form";
@@ -92,7 +92,7 @@ function buildTimelinePayload() {
   }));
 }
 
-export default function ConfiguratorPage() {
+function ConfiguratorPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { language } = useLanguage();
@@ -410,6 +410,14 @@ export default function ConfiguratorPage() {
         </form>
       </div>
     </FormProvider>
+  );
+}
+
+export default function ConfiguratorPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-foreground/70">Loading configurator...</div>}>
+      <ConfiguratorPageContent />
+    </Suspense>
   );
 }
 
