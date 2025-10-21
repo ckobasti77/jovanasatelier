@@ -7,6 +7,7 @@ import {
 import { ReactNode, useMemo } from "react";
 
 const convexUrl =
+  process.env.NEXT_PUBLIC_CONVEX_URL ||
   process.env.NEXT_PUBLIC_CONVEX_URL_PROD ||
   process.env.NEXT_PUBLIC_CONVEX_URL_DEV ||
   "http://localhost:8187";

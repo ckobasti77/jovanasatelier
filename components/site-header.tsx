@@ -49,7 +49,6 @@ const CTAS = {
 export function SiteHeader() {
   const { language } = useLanguage();
   const navItems = NAV_ITEMS[language];
-  const subtitle = SUBTITLE[language];
   const ctas = CTAS[language];
   const sessionToken = useSessionToken();
   const viewer = useConvexQuery(
