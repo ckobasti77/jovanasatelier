@@ -30,7 +30,7 @@ import { useLanguage } from "@/components/language-provider";
 
 const HERO_HIGHLIGHTS = [
   {
-    icon: <Layers3 className="h-5 w-5" />,
+    icon: <Layers3 className="h-6 w-6" />,
     copy: {
       en: {
         title: "Signature silhouettes",
@@ -43,7 +43,7 @@ const HERO_HIGHLIGHTS = [
     },
   },
   {
-    icon: <Ruler className="h-5 w-5" />,
+    icon: <Ruler className="h-6 w-6" />,
     copy: {
       en: {
         title: "Precision fit",
@@ -56,7 +56,7 @@ const HERO_HIGHLIGHTS = [
     },
   },
   {
-    icon: <Palette className="h-5 w-5" />,
+    icon: <Palette className="h-6 w-6" />,
     copy: {
       en: {
         title: "Material artistry",
@@ -321,7 +321,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-6xl flex-col gap-24 px-6 pb-32 pt-16 sm:pt-24">
+      <main className="mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-6xl flex-col gap-16 px-4 pb-28 pt-14 sm:gap-20 sm:px-6 sm:pb-32 sm:pt-20 lg:gap-24">
         <HeroSection />
         <ModelsSection />
         <ConfiguratorProcess />
@@ -338,79 +338,11 @@ function HeroSection() {
   const copy = HOME_COPY[language].hero;
   return (
     <section
-      className="relative grid gap-10 overflow-hidden rounded-[32px] border border-border/50 p-10 transition-colors duration-500 sm:grid-cols-[1.1fr_0.9fr] sm:gap-14 sm:p-16"
+      className="relative flex flex-col gap-8 overflow-hidden rounded-[28px] border border-border/50 p-6 transition-colors duration-500 sm:gap-10 sm:p-10 lg:grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.2fr)] lg:gap-14 lg:rounded-[32px] lg:p-16"
       style={{ backgroundImage: "var(--hero-surface)" }}
     >
-      <div className="relative z-10 flex flex-col gap-8">
-        <div className="flex flex-wrap items-center gap-3">
-          <Badge className="bg-foreground/10 text-xs font-semibold uppercase tracking-[0.22em] text-foreground">
-            {copy.badge}
-          </Badge>
-          <span className="text-sm text-foreground/60">
-            {copy.subline}
-          </span>
-        </div>
-        <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          {copy.title}
-        </h1>
-        <p className="max-w-xl text-base text-foreground/70 sm:text-lg">
-          {copy.description}
-        </p>
-        <div className="flex flex-wrap items-center gap-4">
-          <Button asChild size="lg">
-            <Link href="/configurator">
-              {copy.primaryCta}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" size="lg">
-            <Link href="#models">
-              {copy.secondaryCta}
-              <MoveRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-        <motion.div
-          className="grid gap-3 sm:grid-cols-3"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={{
-            hidden: { opacity: 0, y: 24 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { staggerChildren: 0.12, duration: 0.6 },
-            },
-          }}
-        >
-          {HERO_HIGHLIGHTS.map((item) => {
-            const highlight = item.copy[language];
-            return (
-            <motion.div
-              key={highlight.title}
-              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
-              className="group rounded-3xl border border-border/25 bg-background/75 p-5 shadow-sm backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-foreground/35 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.45)]"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center rounded-full bg-gradient-to-br from-foreground/12 via-foreground/5 to-transparent text-foreground">
-                  {item.icon}
-                </span>
-                <h3 className="text-base font-semibold text-foreground">
-                  {highlight.title}
-                </h3>
-              </div>
-              <div className="mt-4 h-[3px] w-12 rounded-full bg-gradient-to-r from-foreground/50 via-foreground/20 to-transparent transition-all duration-300 group-hover:w-16" />
-              <p className="mt-4 text-sm leading-relaxed text-foreground/60">
-                  {highlight.description}
-              </p>
-            </motion.div>
-            );
-          })}
-        </motion.div>
-      </div>
       <motion.div
-        className="relative hidden min-h-[460px] overflow-hidden rounded-[32px] border border-border/60 bg-background/60 shadow-[0_30px_70px_-40px_rgba(15,23,42,0.55)] sm:block"
+        className="relative order-first h-64 w-full overflow-hidden rounded-[24px] border border-border/60 bg-background/70 shadow-[0_30px_70px_-40px_rgba(15,23,42,0.55)] sm:h-80 sm:rounded-[28px] lg:order-none lg:min-h-[460px] lg:rounded-[32px]"
         initial={{ opacity: 0, scale: 0.94 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
@@ -423,18 +355,18 @@ function HeroSection() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-background/80 via-background/10 to-transparent" />
-        <div className="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/20 px-4 py-2 text-xs uppercase tracking-[0.32em] text-black/75 backdrop-blur">
+        <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/25 px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.32em] text-black/75 backdrop-blur sm:left-6 sm:top-6 sm:px-4 sm:py-2">
           <Sparkles className="h-3.5 w-3.5 text-black/80" />
           {copy.overlayTag}
         </div>
-        <div className="absolute left-6 right-6 bottom-6 flex flex-col gap-3 rounded-3xl border border-white/30 bg-background p-5 text-sm text-foreground shadow-[0_25px_45px_-35px_rgba(15,23,42,0.65)] backdrop-blur">
-          <p className="text-xs uppercase tracking-[0.32em] text-foreground/55">
+        <div className="absolute inset-x-4 bottom-4 flex flex-col gap-3 rounded-3xl border border-white/30 bg-background/95 p-5 text-sm text-foreground shadow-[0_25px_45px_-35px_rgba(15,23,42,0.65)] backdrop-blur sm:inset-x-6 sm:bottom-6 sm:p-5 lg:p-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-foreground/55">
             {copy.overlayLabel}
           </p>
-          <p className="text-base font-semibold leading-snug text-foreground">
+          <p className="text-base font-semibold leading-snug text-foreground sm:text-lg">
             {copy.overlayDescription}
           </p>
-          <div className="flex flex-wrap items-center gap-2 text-[0.65rem] uppercase tracking-[0.28em] text-foreground/55">
+          <div className="flex flex-wrap items-center gap-2 text-[0.6rem] uppercase tracking-[0.26em] text-foreground/55 sm:text-[0.65rem]">
             {copy.overlayChips.map((chip) => (
               <span
                 key={chip}
@@ -445,6 +377,87 @@ function HeroSection() {
             ))}
           </div>
         </div>
+      </motion.div>
+      <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Badge className="bg-foreground/10 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-foreground">
+            {copy.badge}
+          </Badge>
+          <span className="text-xs text-foreground/60 sm:text-sm">
+            {copy.subline}
+          </span>
+        </div>
+        <h1 className="text-3xl font-semibold leading-[1.08] tracking-tight text-foreground sm:text-4xl md:text-5xl">
+          {copy.title}
+        </h1>
+        <p className="max-w-xl text-sm text-foreground/70 sm:text-base">
+          {copy.description}
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+          <Button asChild size="md" className="w-full sm:w-auto">
+            <Link href="/configurator">
+              {copy.primaryCta}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="ghost"
+            size="md"
+            className="w-full border border-foreground/15 sm:w-auto"
+          >
+            <Link href="#models">
+              {copy.secondaryCta}
+              <MoveRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+      <motion.div
+        className="mt-4 grid gap-5 sm:mt-6 sm:grid-cols-2 lg:col-span-2 lg:mt-8 lg:grid-cols-3"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={{
+          hidden: { opacity: 0, y: 24 },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { staggerChildren: 0.12, duration: 0.6 },
+          },
+        }}
+      >
+        {HERO_HIGHLIGHTS.map((item) => {
+          const highlight = item.copy[language];
+          return (
+            <motion.div
+              key={highlight.title}
+              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
+              className="group relative overflow-hidden rounded-[28px] border border-border/20 bg-background/85 p-6 shadow-[0_20px_48px_-30px_rgba(15,23,42,0.55)] transition-all duration-500 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-[0_30px_60px_-28px_rgba(15,23,42,0.58)]"
+            >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-px rounded-[26px] border border-white/5 opacity-0 transition duration-500 group-hover:opacity-100"
+              />
+              <div className="relative flex flex-col gap-5">
+                <div className="flex items-center gap-4">
+                  <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-foreground/10 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-500 group-hover:scale-105">
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-2xl border border-white/15 opacity-0 transition duration-500 group-hover:opacity-100"
+                    />
+                    {item.icon}
+                  </span>
+                  <h3 className="text-lg font-semibold text-foreground">{highlight.title}</h3>
+                </div>
+                <div className="h-[2px] w-14 rounded-full bg-gradient-to-r from-foreground/40 via-foreground/20 to-transparent transition-all duration-500 group-hover:w-20 group-hover:from-foreground/60" />
+                <p className="text-sm leading-relaxed text-foreground/70">
+                  {highlight.description}
+                </p>
+              </div>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </section>
   );
@@ -463,7 +476,12 @@ function ModelsSection() {
           <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             {copy.heading}
           </h2>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="w-full justify-center sm:w-auto"
+          >
             <Link href="/lookbook">
               {copy.cta}
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -614,7 +632,7 @@ function ConfiguratorProcess() {
           );
         })}
       </div>
-      <div className="flex flex-col gap-6 rounded-[28px] border border-border/40 bg-background/80 p-8 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-6 rounded-[24px] border border-border/40 bg-background/80 p-6 sm:p-7 md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="space-y-3">
           <h3 className="text-2xl font-semibold text-foreground">
             {copy.shareTitle}
@@ -623,8 +641,8 @@ function ConfiguratorProcess() {
             {copy.shareDescription}
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-background">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-background/95">
             <Share2 className="h-5 w-5 text-foreground/70" />
           </div>
           <div className="text-sm text-foreground/65">
@@ -646,7 +664,7 @@ function FitAssistantHighlight() {
   return (
     <section
       id="fit"
-      className="grid gap-10 rounded-[28px] border border-border/50 p-10 transition-colors duration-500 sm:grid-cols-2 sm:p-16"
+      className="grid gap-8 rounded-[24px] border border-border/50 p-6 transition-colors duration-500 sm:gap-10 sm:p-10 lg:grid-cols-2 lg:rounded-[28px] lg:p-16"
       style={{ backgroundImage: "var(--fit-surface)" }}
     >
       <div className="space-y-5">
@@ -668,20 +686,24 @@ function FitAssistantHighlight() {
             </li>
           ))}
         </ul>
-        <div className="flex flex-wrap items-center gap-4">
-          <Button asChild>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+          <Button asChild className="w-full sm:w-auto">
             <Link href="/configurator">
               {copy.primaryCta}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <Button asChild variant="ghost">
+          <Button
+            asChild
+            variant="ghost"
+            className="w-full border border-foreground/15 sm:w-auto"
+          >
             <Link href="/guides/measurement">{copy.secondaryCta}</Link>
           </Button>
         </div>
       </div>
       <motion.div
-        className="relative overflow-hidden rounded-[24px] border border-border/40 bg-background/80 p-6"
+        className="relative overflow-hidden rounded-[24px] border border-border/40 bg-background/80 p-5 sm:p-6"
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-150px" }}
@@ -768,7 +790,7 @@ function AftercareSection() {
           );
         })}
       </div>
-      <div className="flex flex-col gap-6 rounded-[24px] border border-border/50 bg-background/80 p-8 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-6 rounded-[24px] border border-border/50 bg-background/80 p-6 sm:p-7 md:flex-row md:items-center md:justify-between md:p-8">
         <div>
           <h3 className="text-2xl font-semibold text-foreground">
             {copy.closingTitle}
@@ -777,11 +799,15 @@ function AftercareSection() {
             {copy.closingDescription}
           </p>
         </div>
-        <div className="flex flex-wrap lg:flex-nowrap items-center gap-4">
-          <Button asChild>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+          <Button asChild className="w-full sm:w-auto">
             <Link href="/sign-up">{copy.primaryCta}</Link>
           </Button>
-          <Button asChild variant="ghost">
+          <Button
+            asChild
+            variant="ghost"
+            className="w-full border border-foreground/15 sm:w-auto"
+          >
             <Link href="/portal">{copy.secondaryCta}</Link>
           </Button>
         </div>
@@ -789,10 +815,3 @@ function AftercareSection() {
     </section>
   );
 }
-
-
-
-
-
-
-

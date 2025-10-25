@@ -16,6 +16,7 @@ export const configuratorSchema = z.object({
     .or(z.literal("")),
   measurements: measurementSchema,
   bodyProfile: bodyProfileSchema.partial().optional(),
+  saveMeasurementProfile: z.boolean().optional(),
 });
 
 export type ConfiguratorInput = z.input<typeof configuratorSchema>;
@@ -80,6 +81,7 @@ export type ConfiguratorFieldPath =
   | "lengthId"
   | "rushOrder"
   | "notes"
+  | "saveMeasurementProfile"
   | MeasurementFieldPath
   | BodyProfileFieldPath;
 

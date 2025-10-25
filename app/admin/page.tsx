@@ -420,8 +420,8 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 py-16">
-      <header className="flex flex-wrap items-center justify-between gap-4">
+    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-4 pb-20 pt-14 sm:gap-12 sm:px-6 sm:pt-16 sm:pb-24">
+      <header className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-3">
           <Badge variant="outline" className="uppercase tracking-[0.35em]">
             {copy.badge}
@@ -431,25 +431,29 @@ export default function AdminPage() {
             <p className="text-sm text-foreground/70">{copy.description}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <LanguageToggle />
-          <ThemeToggle />
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="rounded-full border border-border/60"
-          >
-            <Link href="/">{language === "sr" ? "Nazad na početnu" : "Back to home"}</Link>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="rounded-full border border-border/60"
-            onClick={handleSignOut}
-          >
-            {language === "sr" ? "Odjavi se" : "Sign out"}
-          </Button>
+        <div className="flex flex-col gap-3 sm:items-end">
+          <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="w-full rounded-full border border-border/60 sm:w-auto"
+            >
+              <Link href="/">{language === "sr" ? "Nazad na pocetnu" : "Back to home"}</Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full rounded-full border border-border/60 sm:w-auto"
+              onClick={handleSignOut}
+            >
+              {language === "sr" ? "Odjavi se" : "Sign out"}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -1326,6 +1330,7 @@ function stageLabel(stage: string, language: "en" | "sr") {
   const match = ORDER_STAGE_OPTIONS.find((option) => option.value === stage);
   return match ? match.label[language] : stage;
 }
+
 
 
 

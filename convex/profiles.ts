@@ -34,6 +34,38 @@ export const list = query({
   },
 });
 
+export const get = query({
+  args: {
+    sessionToken: v.optional(v.string()),
+    profileId: v.id("measurementProfiles"),
+  },
+  handler: async (
+    ctx: QueryCtx,
+    args: { sessionToken?: string; profileId: Id<"measurementProfiles"> },
+  ) => {
+    const viewer = await getViewer(ctx, args.sessionToken);
+    if (!viewer) return null;
+
+    const profile = await ctx.db.get(args.profileId);
+    if (!profile || profile.userId !== viewer.user.id) {
+      return null;
+    }
+
+    return {
+      id: profile._id,
+      label: profile.label,
+      bust: profile.bust,
+      waist: profile.waist,
+      hips: profile.hips,
+      height: profile.height,
+      heel: profile.heel,
+      notes: profile.notes ?? undefined,
+      createdAt: profile.createdAt,
+      updatedAt: profile.updatedAt,
+    };
+  },
+});
+
 type UpsertArgs = {
   sessionToken?: string;
   profileId?: Id<"measurementProfiles">;

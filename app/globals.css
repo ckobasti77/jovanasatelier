@@ -131,6 +131,15 @@
   body {
     @apply bg-background text-foreground;
   }
+  :where(section[id]) {
+    scroll-margin-top: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  :where(section[id]) {
+    scroll-margin-top: 7.5rem;
+  }
 }
 
 @layer components {

@@ -21,7 +21,7 @@ export function Stepper({ activeStep }: StepperProps) {
             : `${activeStep + 1} of ${configuratorSteps.length} steps`}
         </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {configuratorSteps.map((step, index) => {
           const status =
             index < activeStep ? "completed" : index === activeStep ? "active" : "upcoming";

@@ -1,6 +1,8 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -20,7 +22,7 @@ const NAV_ITEMS = {
   ],
   sr: [
     { href: "#models", label: "Modeli" },
-    { href: "#process", label: "Kako funkcioniše" },
+    { href: "#process", label: "Kako funkcionise" },
     { href: "#fit", label: "Asistent za mere" },
     { href: "#aftercare", label: "Negovanje" },
   ],
@@ -70,31 +72,70 @@ export function SiteHeader() {
     language === "en"
       ? "whitespace-nowrap px-3 text-sm tracking-[0.06em]"
       : "whitespace-nowrap";
+  const mobileNavLinkClass = cn(
+    "w-full rounded-2xl border border-border/40 bg-background/85 px-6 py-3 text-sm font-semibold uppercase text-foreground/75 transition hover:bg-foreground/10",
+    language === "sr" ? "tracking-[0.18em]" : "tracking-[0.22em]",
+  );
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isMobileMenuOpen]);
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-gradient-to-b from-background/95 via-background/90 backdrop-blur">
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-4 px-6 py-4 md:gap-6 md:py-6">
-        <Link href="/" className="group flex items-center gap-3 md:gap-4">
-          <Logo className="transition group-hover:scale-[1.02]" />
-        </Link>
+      <div className="mx-auto flex w-full max-w-6xl items-center gap-3 px-4 py-4 sm:px-6 md:gap-6 md:py-6">
+        <div className="flex flex-1 items-center gap-2 md:gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Toggle navigation"
+            aria-expanded={isMobileMenuOpen}
+            className="border border-border/60 bg-background/80 text-foreground hover:bg-foreground/10 md:hidden"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <Link href="/" className="group flex items-center gap-3 md:gap-4">
+            <Logo className="transition group-hover:scale-[1.02]" />
+          </Link>
+        </div>
         <nav
           className={cn(
-            "hidden items-center justify-center whitespace-nowrap md:flex",
+            "hidden flex-1 items-center justify-center whitespace-nowrap md:flex",
             navGapClass,
           )}
         >
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className={navLinkClass}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={navLinkClass}
+            >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center justify-end gap-2.5 md:gap-3.5">
+        <div className="hidden items-center justify-end gap-2.5 md:flex md:gap-3.5">
           <div className="flex items-center gap-2">
             <LanguageToggle />
             <ThemeToggle />
           </div>
-          <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="hidden md:inline-flex"
+          >
             <Link href={isAuthenticated ? portalHref : "/sign-in"}>
               {isAuthenticated ? portalLabel : ctas.signIn}
             </Link>
@@ -103,7 +144,94 @@ export function SiteHeader() {
             <Link href="/configurator">{ctas.design}</Link>
           </Button>
         </div>
+        <div className="flex items-center gap-2 md:hidden">
+          <Button
+            asChild
+            size="sm"
+            className="flex-1 whitespace-nowrap px-4 text-sm tracking-[0.08em]"
+          >
+            <Link href="/configurator">{ctas.design}</Link>
+          </Button>
+        </div>
       </div>
+      {isMobileMenuOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-foreground/30 backdrop-blur-sm md:hidden"
+            role="presentation"
+            onClick={closeMobileMenu}
+          />
+          <div
+            className="fixed inset-x-0 top-0 z-50 flex h-full flex-col gap-6 bg-background/98 px-4 pb-10 pt-5 shadow-2xl transition md:hidden"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-center justify-between">
+              <Link
+                href="/"
+                className="group flex items-center gap-3"
+                onClick={closeMobileMenu}
+              >
+                <Logo className="h-10 w-auto transition group-hover:scale-[1.02]" />
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Close navigation"
+                className="border border-border/70 bg-background/80 text-foreground hover:bg-foreground/10"
+                onClick={closeMobileMenu}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <nav className="flex flex-col gap-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={mobileNavLinkClass}
+                  onClick={closeMobileMenu}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="mt-auto flex flex-col gap-4">
+              <Button
+                asChild
+                size="md"
+                className="w-full justify-center px-6 text-base tracking-[0.08em]"
+              >
+                <Link href="/configurator" onClick={closeMobileMenu}>
+                  {ctas.design}
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="md"
+                className="w-full justify-center border border-border/50 bg-background/80 px-6 text-base"
+              >
+                <Link
+                  href={isAuthenticated ? portalHref : "/sign-in"}
+                  onClick={closeMobileMenu}
+                >
+                  {isAuthenticated ? portalLabel : ctas.signIn}
+                </Link>
+              </Button>
+              <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/40 bg-background/60 px-4 py-3">
+                <span className="text-xs font-semibold uppercase tracking-[0.26em] text-foreground/50">
+                  {SUBTITLE[language]}
+                </span>
+                <div className="flex items-center gap-2">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </header>
   );
 }

@@ -129,6 +129,10 @@ type PortalCopy = {
   measurements: {
     label: string;
     addNew: string;
+    saveFromPortal: string;
+    emptyTitle: string;
+    emptyBody: string;
+    createFirst: string;
     metrics: {
       bust: string;
       waist: string;
@@ -208,6 +212,10 @@ const PORTAL_COPY: Record<Language, PortalCopy> = {
     measurements: {
       label: "measurement profiles",
       addNew: "Add new profile",
+      saveFromPortal: "Save portal form as profile",
+      emptyTitle: "No profiles yet",
+      emptyBody: "Capture measurements once and reuse them for every order.",
+      createFirst: "Create your first profile",
       metrics: {
         bust: "Bust",
         waist: "Waist",
@@ -286,6 +294,10 @@ const PORTAL_COPY: Record<Language, PortalCopy> = {
     measurements: {
       label: "profili mera",
       addNew: "Dodaj novi profil",
+      saveFromPortal: "Sacuvaj portal formu kao profil",
+      emptyTitle: "Jos nema profila",
+      emptyBody: "Unesi mere jednom i koristi ih za svaku buducu porudzbinu.",
+      createFirst: "Kreiraj prvi profil",
       metrics: {
         bust: "Grudi",
         waist: "Struk",
@@ -364,28 +376,7 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
           ],
         },
       ],
-      profiles: [
-        {
-          id: "profile-1",
-          label: "Jovana - Heels",
-          bust: 92,
-          waist: 70,
-          hips: 98,
-          height: 175,
-          heel: 8,
-          lastUpdatedLabel: "Used 4 days ago",
-        },
-        {
-          id: "profile-2",
-          label: "Jovana - Barefoot",
-          bust: 91,
-          waist: 69,
-          hips: 97,
-          height: 173,
-          heel: 0,
-          lastUpdatedLabel: "Used 2 months ago",
-        },
-      ],
+      profiles: [],
       inspirations: [
         {
           id: "insp-1",
@@ -442,28 +433,7 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
           ],
         },
       ],
-      profiles: [
-        {
-          id: "profile-1",
-          label: "Jovana - Štikle",
-          bust: 92,
-          waist: 70,
-          hips: 98,
-          height: 175,
-          heel: 8,
-          lastUpdatedLabel: "Korišćeno pre 4 dana",
-        },
-        {
-          id: "profile-2",
-          label: "Jovana - Bosa",
-          bust: 91,
-          waist: 69,
-          hips: 97,
-          height: 173,
-          heel: 0,
-          lastUpdatedLabel: "Korišćeno pre 2 meseca",
-        },
-      ],
+      profiles: [],
       inspirations: [
         {
           id: "insp-1",
@@ -596,8 +566,8 @@ export default function PortalPage() {
       ? `${copy.measurements.updatedPrefix} ${new Date(profile.updatedAt).toLocaleDateString(locale)}`
       : copy.measurements.awaitingUse,
   }));
-  const measurementProfiles =
-    mappedProfiles.length > 0 ? mappedProfiles : fallbacks.profiles;
+  const measurementProfiles = mappedProfiles;
+  const hasMeasurementProfiles = measurementProfiles.length > 0;
 
   const inspirations = (dashboard?.inspirations ?? []).map((item) => ({
     id: item.id,
@@ -646,6 +616,10 @@ export default function PortalPage() {
     }
   }
 
+  function handlePortalProfileSave() {
+    router.push("/profiles/new?source=portal");
+  }
+
   async function handleConciergeSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setConciergeFeedback(null);
@@ -676,8 +650,8 @@ export default function PortalPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 py-16">
-      <header className="flex flex-wrap items-center justify-between gap-6">
+    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-4 pb-20 pt-14 sm:gap-12 sm:px-6 sm:pt-16 sm:pb-24">
+      <header className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-3">
           <Badge className="uppercase tracking-[0.35em]">{copy.badge}</Badge>
           <div className="space-y-1">
@@ -689,20 +663,25 @@ export default function PortalPage() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-3">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-foreground/55">
+        <div className="flex flex-col gap-3 sm:items-end">
+          <div className="flex flex-wrap items-center gap-3 sm:justify-end">
             <LanguageToggle />
             <ThemeToggle />
           </div>
-          <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm" className="rounded-full border border-border/60">
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="w-full rounded-full border border-border/60 sm:w-auto"
+            >
               <Link href="/">{copy.nav.home}</Link>
             </Button>
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="rounded-full border border-border/60"
+              className="w-full rounded-full border border-border/60 sm:w-auto"
               onClick={handleSignOut}
             >
               {copy.nav.signOut}
@@ -712,7 +691,7 @@ export default function PortalPage() {
       </header>
 
       <motion.section
-        className="grid gap-8 rounded-[28px] border border-border/40 bg-background/80 p-8 md:grid-cols-[1fr_0.8fr]"
+        className="grid gap-6 rounded-[24px] border border-border/40 bg-background/80 p-6 sm:gap-8 sm:p-8 md:grid-cols-[1fr_0.8fr]"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -802,11 +781,11 @@ export default function PortalPage() {
                     ))}
                   </div>
                 </CardContent>
-                <CardFooter className="flex flex-wrap items-center justify-between gap-4 pt-0">
-                  <Button asChild size="sm" variant="ghost">
+                <CardFooter className="flex flex-col gap-2 pt-0 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+                  <Button asChild size="sm" variant="ghost" className="w-full sm:w-auto">
                     <Link href={`/orders/${order.orderCode}`}>{copy.orders.viewNotes}</Link>
                   </Button>
-                  <Button asChild size="sm">
+                  <Button asChild size="sm" className="w-full sm:w-auto">
                     <Link href={`/orders/${order.orderCode}/share`}>
                       {copy.orders.shareProgress}
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -822,54 +801,77 @@ export default function PortalPage() {
         <div className="space-y-6">
           <Card className="border-border/40 bg-background/85">
             <CardHeader>
-              <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-foreground/55">
+              <div className="flex flex-col gap-3 text-xs uppercase tracking-[0.3em] text-foreground/55 sm:flex-row sm:items-center sm:justify-between">
                 <span>{copy.measurements.label}</span>
-                <Button asChild variant="ghost" size="sm" className="rounded-full px-3 py-1">
-                  <Link href="/configurator">{copy.measurements.addNew}</Link>
-                </Button>
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="w-full rounded-full px-3 py-1 sm:w-auto"
+                    onClick={handlePortalProfileSave}
+                  >
+                    {copy.measurements.saveFromPortal}
+                  </Button>
+                  <Button asChild variant="ghost" size="sm" className="w-full rounded-full px-3 py-1 sm:w-auto">
+                    <Link href="/profiles/new">{copy.measurements.addNew}</Link>
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              {measurementProfiles.map((profile) => (
-                <div
-                  key={profile.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-border/40 bg-background/80 p-4 text-sm text-foreground/70"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-base font-semibold text-foreground">{profile.label}</h4>
-                      <p className="text-xs uppercase tracking-[0.28em] text-foreground/50">
-                        {profile.lastUpdatedLabel}
-                      </p>
+              {hasMeasurementProfiles ? (
+                measurementProfiles.map((profile) => (
+                  <div
+                    key={profile.id}
+                    className="flex flex-col gap-3 rounded-2xl border border-border/40 bg-background/80 p-4 text-sm text-foreground/70"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-base font-semibold text-foreground">{profile.label}</h4>
+                        <p className="text-xs uppercase tracking-[0.28em] text-foreground/50">
+                          {profile.lastUpdatedLabel}
+                        </p>
+                      </div>
+                      <Ruler className="h-4 w-4 text-foreground/60" />
                     </div>
-                    <Ruler className="h-4 w-4 text-foreground/60" />
+                    <div className="grid gap-3 text-xs uppercase tracking-[0.22em] text-foreground/55 sm:grid-cols-2">
+                      <span>
+                        {copy.measurements.metrics.bust} - <strong className="ml-1 text-foreground/80">{profile.bust} cm</strong>
+                      </span>
+                      <span>
+                        {copy.measurements.metrics.waist} -{" "}
+                        <strong className="ml-1 text-foreground/80">{profile.waist} cm</strong>
+                      </span>
+                      <span>
+                        {copy.measurements.metrics.hips} -{" "}
+                        <strong className="ml-1 text-foreground/80">{profile.hips} cm</strong>
+                      </span>
+                      <span>
+                        {copy.measurements.metrics.heel} -{" "}
+                        <strong className="ml-1 text-foreground/80">{profile.heel} cm</strong>
+                      </span>
+                    </div>
+                    <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
+                      <Link href={`/profiles/${profile.id}`}>{copy.measurements.viewProfile}</Link>
+                    </Button>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 text-xs uppercase tracking-[0.22em] text-foreground/55">
-                    <span>
-                      {copy.measurements.metrics.bust} - <strong className="ml-1 text-foreground/80">{profile.bust} cm</strong>
-                    </span>
-                    <span>
-                      {copy.measurements.metrics.waist} -{" "}
-                      <strong className="ml-1 text-foreground/80">{profile.waist} cm</strong>
-                    </span>
-                    <span>
-                      {copy.measurements.metrics.hips} -{" "}
-                      <strong className="ml-1 text-foreground/80">{profile.hips} cm</strong>
-                    </span>
-                    <span>
-                      {copy.measurements.metrics.heel} -{" "}
-                      <strong className="ml-1 text-foreground/80">{profile.heel} cm</strong>
-                    </span>
+                ))
+              ) : (
+                <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/40 bg-background/80 p-6 text-center text-sm text-foreground/70">
+                  <div className="space-y-2">
+                    <h4 className="text-base font-semibold text-foreground">{copy.measurements.emptyTitle}</h4>
+                    <p>{copy.measurements.emptyBody}</p>
                   </div>
-                  <Button asChild variant="outline" size="sm" className="self-start">
-                    <Link href={`/profiles/${profile.id}`}>{copy.measurements.viewProfile}</Link>
+                  <Button asChild size="sm" className="w-full sm:w-auto">
+                    <Link href="/profiles/new">{copy.measurements.createFirst}</Link>
                   </Button>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
 
-          <Card className="border-border/40 bg-background/85">
+          {/* <Card className="border-border/40 bg-background/85">
             <CardHeader className="space-y-2">
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground/55">
                 <Sparkles className="h-4 w-4" />
@@ -888,7 +890,7 @@ export default function PortalPage() {
                     <Star className="h-4 w-4 text-foreground/60" />
                   </div>
                   <p className="mt-2">{item.description}</p>
-                  <Button asChild variant="ghost" size="sm" className="mt-3">
+                  <Button asChild variant="ghost" size="sm" className="mt-3 w-full sm:w-auto">
                     <Link href={item.url}>
                       {copy.inspirations.explore}
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -897,7 +899,7 @@ export default function PortalPage() {
                 </div>
               ))}
             </CardContent>
-          </Card>
+          </Card> */}
 
           <Card className="border-border/40 bg-background/85">
             <CardHeader>
@@ -1047,6 +1049,7 @@ export default function PortalPage() {
     </div>
   );
 }
-
+
+
 
 

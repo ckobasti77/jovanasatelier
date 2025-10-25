@@ -1,6 +1,6 @@
 ﻿import { z } from "zod";
 
-const measurementNumber = (label: string, min: number, max: number) =>
+export const measurementNumber = (label: string, min: number, max: number) =>
   z.preprocess(
     (value) => {
       if (value === "" || value === null || typeof value === "undefined") {
@@ -38,6 +38,26 @@ export const bodyProfileSchema = z.object({
 });
 
 export type BodyProfileValues = z.infer<typeof bodyProfileSchema>;
+
+export const measurementProfileSchema = z.object({
+  label: z
+    .string()
+    .min(2, "Label must have at least 2 characters")
+    .max(60, "Label should be under 60 characters"),
+  bust: measurementNumber("Bust", 70, 130),
+  waist: measurementNumber("Waist", 50, 115),
+  hips: measurementNumber("Hips", 75, 140),
+  height: measurementNumber("Height", 150, 190),
+  heel: measurementNumber("Heel height", 0, 15),
+  notes: z
+    .string()
+    .max(400, "Notes should stay under 400 characters")
+    .optional()
+    .or(z.literal(""))
+    .transform((value) => (value === "" ? undefined : value)),
+});
+
+export type MeasurementProfileValues = z.infer<typeof measurementProfileSchema>;
 
 export const measurementTips: Record<keyof MeasurementValues, string> = {
   bust: "Wrap the tape around the fullest part of your bust, keeping it parallel to the floor.",

@@ -25,6 +25,9 @@ const REVIEW_COPY = {
     measurements: "measurements",
     measurementUnit: "cm",
     missingValue: "-",
+    saveProfileTitle: "Save these measurements as a profile",
+    saveProfileDescription:
+      "We will store bust, waist, hips, height, and heel height so you can reuse them on your next order.",
   },
   sr: {
     title: "Pregled i potvrda",
@@ -42,11 +45,14 @@ const REVIEW_COPY = {
     measurements: "mere",
     measurementUnit: "cm",
     missingValue: "-",
+    saveProfileTitle: "Sačuvaj ove mere kao profil",
+    saveProfileDescription:
+      "Sačuvaćemo grudi, struk, kukove, visinu i štiklu da ih koristiš za sledeću porudžbinu.",
   },
 } as const;
 
 export function ReviewPanel({ modelId }: { modelId: string }) {
-  const { getValues } = useFormContext<ConfiguratorInput>();
+  const { getValues, register } = useFormContext<ConfiguratorInput>();
   const { language } = useLanguage();
   const { getLabel } = useMeasurementLabels();
   const copy = REVIEW_COPY[language];
@@ -113,6 +119,24 @@ export function ReviewPanel({ modelId }: { modelId: string }) {
           ))}
         </CardContent>
       </Card>
+
+      <div className="rounded-2xl border border-border/45 bg-background/80 p-5">
+        <label className="flex items-start gap-3 text-left">
+          <input
+            type="checkbox"
+            {...register("saveMeasurementProfile")}
+            className="mt-1 h-4 w-4 rounded border-border/60 bg-background accent-foreground"
+          />
+          <span className="space-y-1">
+            <span className="block text-sm font-semibold text-foreground">
+              {copy.saveProfileTitle}
+            </span>
+            <span className="block text-xs text-foreground/60">
+              {copy.saveProfileDescription}
+            </span>
+          </span>
+        </label>
+      </div>
     </div>
   );
 }

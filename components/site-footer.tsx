@@ -75,7 +75,7 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-border/60 bg-background/90">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div className="space-y-4">
           <Link href="/" className="group flex items-center gap-3 md:gap-4">
             <Logo className="transition group-hover:scale-[1.02]" />
@@ -101,7 +101,7 @@ export function SiteFooter() {
           </div>
         ))}
       </div>
-      <div className="border-t border-border/50 py-6 text-center text-xs text-foreground/45">
+      <div className="border-t border-border/50 px-4 py-6 text-center text-xs text-foreground/45 sm:px-0">
         Copyright {new Date().getFullYear()} {footerLabel}. {copy.copyright}
       </div>
     </footer>

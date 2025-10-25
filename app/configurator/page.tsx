@@ -49,10 +49,14 @@ const CONFIG_COPY = {
     errors: {
       auth: "You need to sign in before placing an order.",
       generic: "We could not process your order right now. Please try again shortly.",
+      profileMissing: "To save a profile, please fill bust, waist, hips, height, and heel height.",
+      profileFailed: "We couldn't save the profile. Try again or place the order without saving.",
     },
     success: (code: string) =>
       `Order ${code} has been submitted to the atelier.`,
     backAria: "Return to previous page",
+    profileLabel: (model: string, dateLabel: string) =>
+      `Profile for ${model} • ${dateLabel}`,
   },
   sr: {
     backCta: "Nazad na sajt",
@@ -68,10 +72,14 @@ const CONFIG_COPY = {
     errors: {
       auth: "Prijavi se da bi poslala porudžbinu.",
       generic: "Porudžbina trenutno ne može da se obradi. Pokušaj ponovo uskoro.",
+      profileMissing: "Da sačuvaš profil, popuni grudi, struk, kukove, visinu i visinu štikle.",
+      profileFailed: "Profil nije sačuvan. Pokušaj ponovo ili pošalji porudžbinu bez čuvanja.",
     },
     success: (code: string) =>
       `Porudžbina ${code} je poslata u atelje.`,
     backAria: "Povratak na prethodnu stranicu",
+    profileLabel: (model: string, dateLabel: string) =>
+      `Profil za ${model} • ${dateLabel}`,
   },
 } as const;
 
@@ -98,6 +106,7 @@ function ConfiguratorPageContent() {
   const { language } = useLanguage();
   const copy = CONFIG_COPY[language];
   const createOrder = useConvexMutation("orders:create");
+  const upsertProfile = useConvexMutation("profiles:upsert");
   const sessionToken = useSessionToken();
   const [hasHydrated, setHasHydrated] = useState(false);
 
@@ -127,6 +136,7 @@ function ConfiguratorPageContent() {
       lengthId: defaultModel.lengths[0]?.id ?? "",
       rushOrder: false,
       notes: "",
+      saveMeasurementProfile: false,
       measurements: {
         bust: "",
         underbust: "",
@@ -226,6 +236,7 @@ function ConfiguratorPageContent() {
       }
 
       const parsed = configuratorSchema.parse(values);
+      const shouldSaveProfile = Boolean(parsed.saveMeasurementProfile);
       const model =
         DRESS_MODELS.find((candidate) => candidate.id === parsed.modelId) ??
         DRESS_MODELS[0];
@@ -234,6 +245,47 @@ function ConfiguratorPageContent() {
 
       const orderCode = generateOrderCode(model.slug);
       const timelinePayload = buildTimelinePayload();
+      let measurementProfileId: string | undefined;
+
+      if (shouldSaveProfile) {
+        const bust = parsed.measurements?.bust;
+        const waist = parsed.measurements?.waist;
+        const hips = parsed.measurements?.hips;
+        const height = parsed.measurements?.height;
+        const heel = parsed.measurements?.preferredHeel;
+
+        const hasAllCore =
+          typeof bust === "number" &&
+          typeof waist === "number" &&
+          typeof hips === "number" &&
+          typeof height === "number" &&
+          typeof heel === "number";
+
+        if (!hasAllCore) {
+          throw new Error(copy.errors.profileMissing);
+        }
+
+        const formattedDate = new Intl.DateTimeFormat(
+          language === "sr" ? "sr-RS" : "en-US",
+          { day: "2-digit", month: "short" },
+        ).format(new Date());
+
+        try {
+          measurementProfileId = await upsertProfile({
+            sessionToken,
+            profileId: undefined,
+            label: copy.profileLabel(model.name, formattedDate),
+            bust,
+            waist,
+            hips,
+            height,
+            heel,
+            notes: undefined,
+          });
+        } catch (profileError) {
+          throw new Error(getErrorMessage(profileError, copy.errors.profileFailed));
+        }
+      }
 
       const measurementsPayload = {
         bust: typeof parsed.measurements?.bust === "number" ? parsed.measurements.bust : undefined,
@@ -287,7 +339,7 @@ function ConfiguratorPageContent() {
         status: ORDER_STATUS,
         stage: ORDER_STAGE,
         eta: undefined,
-        measurementProfileId: undefined,
+        measurementProfileId,
         productionTimeline: timelinePayload.map((step) => ({
           label: step.label,
           completed: step.completed,
@@ -307,21 +359,21 @@ function ConfiguratorPageContent() {
 
   return (
     <FormProvider {...methods}>
-      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 py-16">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-4 pb-20 pt-14 sm:gap-12 sm:px-6 sm:pt-16 sm:pb-24">
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="w-fit"
+              className="w-full sm:w-auto"
               onClick={() => router.back()}
               aria-label={copy.backAria}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               {copy.backCta}
             </Button>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 sm:justify-end">
               <LanguageToggle />
               <ThemeToggle />
             </div>
@@ -354,24 +406,30 @@ function ConfiguratorPageContent() {
               <ReviewPanel modelId={currentModel.id} />
             )}
 
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-foreground/45">
                 <ShieldCheck className="h-4 w-4" />
                 {copy.secureTag}
               </div>
-              <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={handlePrevious}
                     disabled={activeStep === 0 || isSubmitting}
+                    className="w-full sm:w-auto"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     {copy.previous}
                   </Button>
                   {currentStep.id === "review" ? (
-                    <Button type="button" onClick={handlePlaceOrder} disabled={isSubmitting}>
+                    <Button
+                      type="button"
+                      onClick={handlePlaceOrder}
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto"
+                    >
                       {isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -382,7 +440,12 @@ function ConfiguratorPageContent() {
                       )}
                     </Button>
                   ) : (
-                    <Button type="button" onClick={handleNext} disabled={isSubmitting}>
+                    <Button
+                      type="button"
+                      onClick={handleNext}
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto"
+                    >
                       {copy.next}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -399,7 +462,7 @@ function ConfiguratorPageContent() {
           </div>
 
           <motion.aside
-            className="space-y-6 rounded-[28px] border border-border/50 bg-background/80 p-8"
+            className="space-y-6 rounded-[24px] border border-border/50 bg-background/80 p-6 sm:p-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
