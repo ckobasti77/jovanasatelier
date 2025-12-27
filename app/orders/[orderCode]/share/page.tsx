@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import {
@@ -108,7 +108,7 @@ type ShareSnapshot = {
   updatedAt: number;
 };
 
-export default function SharePage() {
+function SharePageContent() {
   const params = useParams<{ orderCode: string }>();
   const searchParams = useSearchParams();
   const sessionToken = useSessionToken();
@@ -250,6 +250,14 @@ export default function SharePage() {
         />
       ) : null}
     </div>
+  );
+}
+
+export default function SharePage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-foreground/70">Loading share...</div>}>
+      <SharePageContent />
+    </Suspense>
   );
 }
 

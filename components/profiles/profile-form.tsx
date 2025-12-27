@@ -10,11 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   measurementProfileSchema,
+  type MeasurementProfileInput,
   type MeasurementProfileValues,
 } from "@/lib/measurements";
 
 type ProfileFormProps = {
-  defaultValues?: Partial<MeasurementProfileValues>;
+  defaultValues?: Partial<MeasurementProfileInput>;
   onSubmit: (values: MeasurementProfileValues) => Promise<void>;
   onDelete?: () => Promise<void>;
   submitting: boolean;
@@ -36,7 +37,7 @@ type ProfileFormProps = {
   };
 };
 
-const FIELD_ORDER: Array<keyof MeasurementProfileValues> = [
+const FIELD_ORDER: Array<keyof MeasurementProfileInput> = [
   "bust",
   "waist",
   "hips",
@@ -52,7 +53,7 @@ export function ProfileForm({
   deleting,
   copy,
 }: ProfileFormProps) {
-  const form = useForm<MeasurementProfileValues>({
+  const form = useForm<MeasurementProfileInput, unknown, MeasurementProfileValues>({
     resolver: zodResolver(measurementProfileSchema),
     mode: "onBlur",
     defaultValues: {
@@ -70,8 +71,8 @@ export function ProfileForm({
   useEffect(() => {
     if (!defaultValues) return;
     for (const [key, value] of Object.entries(defaultValues)) {
-      const typedKey = key as keyof MeasurementProfileValues;
-      form.setValue(typedKey, value as MeasurementProfileValues[typeof typedKey], {
+      const typedKey = key as keyof MeasurementProfileInput;
+      form.setValue(typedKey, value as MeasurementProfileInput[typeof typedKey], {
         shouldValidate: false,
         shouldDirty: false,
       });
@@ -157,10 +158,10 @@ export function ProfileForm({
 }
 
 type FieldProps = {
-  fieldKey: keyof MeasurementProfileValues;
+  fieldKey: keyof MeasurementProfileInput;
   label: string;
   error?: string;
-  register: UseFormRegister<MeasurementProfileValues>;
+  register: UseFormRegister<MeasurementProfileInput>;
 };
 
 function Field({ fieldKey, label, error, register }: FieldProps) {

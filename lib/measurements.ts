@@ -145,6 +145,7 @@ export const measurementProfileSchema = z.object({
     .transform((value) => (value === "" ? undefined : value)),
 });
 
+export type MeasurementProfileInput = z.input<typeof measurementProfileSchema>;
 export type MeasurementProfileValues = z.infer<typeof measurementProfileSchema>;
 
 export const measurementTips: Record<keyof MeasurementValues, string> = {

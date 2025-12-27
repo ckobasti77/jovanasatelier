@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Loader2, Lock, Mail, Sparkles } from "lucide-react";
@@ -99,7 +99,7 @@ const buildAuthHref = (
   return query ? `${base}?${query}` : base;
 };
 
-export default function SignInPage() {
+function SignInPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { language } = useLanguage();
@@ -274,5 +274,13 @@ export default function SignInPage() {
         </Button>
       </form>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-foreground/70">Loading sign-in...</div>}>
+      <SignInPageContent />
+    </Suspense>
   );
 }
