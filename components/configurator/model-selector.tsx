@@ -83,7 +83,6 @@ export function ModelSelector() {
                 <span className="rounded-full bg-foreground/10 px-3 py-1 text-xs uppercase tracking-[0.28em] text-foreground/70">
                   {SILHOUETTE_LABELS[language][model.silhouette] ?? model.silhouette}
                 </span>
-                <span className="text-xs text-foreground/70">{model.productionTime}</span>
               </div>
               <Image
                 src={model.heroImage}
@@ -101,6 +100,21 @@ export function ModelSelector() {
                   <li key={highlight}>- {highlight}</li>
                 ))}
               </ul>
+              <div className="flex flex-wrap items-center gap-2">
+                {model.colors.map((color) => (
+                  <span
+                    key={color.id}
+                    role="img"
+                    aria-label={color.name}
+                    className="h-5 w-5 rounded-full border border-border/50 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
+                    style={{
+                      background: color.secondary
+                        ? `linear-gradient(135deg, ${color.swatch} 0%, ${color.secondary} 100%)`
+                        : color.swatch,
+                    }}
+                  />
+                ))}
+              </div>
               <span className="sr-only">
                 {selected ? copy.statusSelected : copy.statusChoose}
               </span>

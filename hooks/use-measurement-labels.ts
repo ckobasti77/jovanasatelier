@@ -50,7 +50,7 @@ const FALLBACK_HELPERS_SR: Record<MeasurementKey, string> = {
 export function useMeasurementLabels() {
   const { language } = useLanguage();
 
-  const remoteLabels = useConvexQuery("measurementLabels:list", {
+  const remoteLabels = useConvexQuery("measurements:listLabels", {
     locale: language,
   }) as MeasurementLabelRecord[] | undefined;
 

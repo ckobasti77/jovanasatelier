@@ -18,6 +18,7 @@ export type ColorOption = {
   name: string;
   swatch: string;
   secondary?: string;
+  image?: string;
 };
 
 export type DressModel = {
@@ -39,18 +40,19 @@ export type DressModel = {
 
 export const DRESS_MODELS: DressModel[] = [
   {
-    id: "luma",
-    slug: "luma",
-    name: "Luma",
-    tagLine: "Airy A-line with a cinched waist and flowing skirt.",
+    id: "allure",
+    slug: "allure",
+    name: "Allure",
+    tagLine: "Airy A-line with a sculpted bodice and fluid movement.",
     description:
       "An ethereal silhouette designed to accentuate the waist while allowing effortless movement. Perfect for garden parties and evening cocktails.",
-    basePrice: 220,
+    basePrice: 240,
     productionTime: "7-9 business days",
-    heroImage: "/images/dress1.avif",
+    heroImage:
+      "/images/allure/sauvage/WhatsApp Image 2025-11-24 at 20.56.43.avif",
     silhouette: "a-line",
     accentGradient:
-      "linear-gradient(135deg, rgba(255,241,243,1) 0%, rgba(204,221,255,0.9) 100%)",
+      "linear-gradient(135deg, rgba(255,236,235,1) 0%, rgba(132,22,40,0.85) 100%)",
     highlights: [
       "Adjustable corset-style back",
       "Lightweight double-layered skirt",
@@ -74,9 +76,27 @@ export const DRESS_MODELS: DressModel[] = [
       },
     ],
     colors: [
-      { id: "midnight", name: "Midnight Blue", swatch: "#0f1b48" },
-      { id: "rosewater", name: "Rosewater", swatch: "#f0c7c1" },
-      { id: "ivory", name: "Ivory", swatch: "#f6f2eb", secondary: "#efe9dc" },
+      {
+        id: "red",
+        name: "Red",
+        swatch: "#a11a32",
+        secondary: "#6f0f23",
+        image: "/images/allure/red/WhatsApp Image 2025-12-10 at 16.13.01 (2).avif",
+      },
+      {
+        id: "sauvage",
+        name: "Sauvage",
+        swatch: "#4f4a43",
+        secondary: "#2f2b28",
+        image: "/images/allure/sauvage/WhatsApp Image 2025-11-24 at 20.56.43.avif",
+      },
+      {
+        id: "volour",
+        name: "Velour",
+        swatch: "#5a3b4d",
+        secondary: "#402735",
+        image: "/images/allure/volour/WhatsApp Image 2025-12-10 at 15.57.23.avif",
+      },
     ],
     lengths: [
       {
@@ -92,18 +112,19 @@ export const DRESS_MODELS: DressModel[] = [
     ],
   },
   {
-    id: "vara",
-    slug: "vara",
-    name: "Vara",
+    id: "blush",
+    slug: "blush",
+    name: "Blush",
     tagLine: "Sculpted mermaid silhouette with couture seams.",
     description:
-      "Tailored to follow the body and flare at the hem, Vara is the power dress for red carpets and galas.",
-    basePrice: 310,
+      "Tailored to follow the body and flare at the hem, Blush is the power dress for red carpets and galas.",
+    basePrice: 320,
     productionTime: "10-12 business days",
-    heroImage: "/images/dress2.avif",
+    heroImage:
+      "/images/blush/bloom/WhatsApp Image 2025-12-10 at 16.09.43 (2).avif",
     silhouette: "mermaid",
     accentGradient:
-      "linear-gradient(135deg, rgba(255,233,220,1) 0%, rgba(186,37,73,0.85) 100%)",
+      "linear-gradient(135deg, rgba(255,237,241,1) 0%, rgba(197,52,87,0.85) 100%)",
     highlights: [
       "Boned bodice for structure",
       "Invisible zipper with hand finishing",
@@ -127,9 +148,20 @@ export const DRESS_MODELS: DressModel[] = [
       },
     ],
     colors: [
-      { id: "onyx", name: "Onyx", swatch: "#0b0b0b" },
-      { id: "ruby", name: "Ruby", swatch: "#990f2b" },
-      { id: "champagne", name: "Champagne", swatch: "#ebd9b3" },
+      {
+        id: "bloom",
+        name: "Bloom",
+        swatch: "#f2b7c3",
+        secondary: "#f7d7df",
+        image: "/images/blush/bloom/WhatsApp Image 2025-12-10 at 16.09.43 (2).avif",
+      },
+      {
+        id: "red",
+        name: "Red",
+        swatch: "#98142b",
+        secondary: "#6d0f22",
+        image: "/images/blush/red/WhatsApp Image 2025-12-10 at 16.12.45 (3).avif",
+      },
     ],
     lengths: [
       {
@@ -140,18 +172,19 @@ export const DRESS_MODELS: DressModel[] = [
     ],
   },
   {
-    id: "noor",
-    slug: "noor",
-    name: "Noor",
-    tagLine: "Minimal sheath with architectural neckline.",
+    id: "elegance",
+    slug: "elegance",
+    name: "Elegance",
+    tagLine: "Minimal sheath with an architectural neckline.",
     description:
       "A minimalist column dress that celebrates clean lines and impeccable tailoring. Works for civil ceremonies and art openings alike.",
-    basePrice: 260,
+    basePrice: 275,
     productionTime: "8-10 business days",
-    heroImage: "/images/dress3.avif",
+    heroImage:
+      "/images/elegance/cocoa/WhatsApp Image 2025-11-24 at 20.36.55 (2).avif",
     silhouette: "sheath",
     accentGradient:
-      "linear-gradient(135deg, rgba(235,242,244,1) 0%, rgba(130,142,155,0.9) 100%)",
+      "linear-gradient(135deg, rgba(247,240,233,1) 0%, rgba(117,77,58,0.85) 100%)",
     highlights: [
       "Built-in lining with smoothing mesh",
       "Hidden side pockets",
@@ -174,9 +207,20 @@ export const DRESS_MODELS: DressModel[] = [
       },
     ],
     colors: [
-      { id: "pearl", name: "Pearl", swatch: "#faf1ed" },
-      { id: "slate", name: "Slate Grey", swatch: "#545862" },
-      { id: "sage", name: "Sage", swatch: "#c5d5c1" },
+      {
+        id: "cocoa",
+        name: "Cocoa",
+        swatch: "#6b4a36",
+        secondary: "#4a2f21",
+        image: "/images/elegance/cocoa/WhatsApp Image 2025-11-24 at 20.36.55 (2).avif",
+      },
+      {
+        id: "pearl",
+        name: "Pearl",
+        swatch: "#f5eee5",
+        secondary: "#eadfd3",
+        image: "/images/elegance/pearl/WhatsApp Image 2025-11-24 at 21.37.19.avif",
+      },
     ],
     lengths: [
       {
@@ -197,18 +241,19 @@ export const DRESS_MODELS: DressModel[] = [
     ],
   },
   {
-    id: "solenne",
-    slug: "solenne",
-    name: "Solenne",
-    tagLine: "Romantic ballgown with hand-placed applique.",
+    id: "valeria",
+    slug: "valeria",
+    name: "Valeria",
+    tagLine: "Romantic ballgown with luminous layers.",
     description:
-      "A couture-inspired gown with voluminous layers and intricate floral detailing. Designed for the statement makers.",
-    basePrice: 420,
+      "A couture-inspired gown with voluminous layers and intricate detailing. Designed for statement-making entrances.",
+    basePrice: 440,
     productionTime: "12-15 business days",
-    heroImage: "/images/dress4.avif",
+    heroImage:
+      "/images/valeria/milky/WhatsApp Image 2025-11-24 at 21.46.35.avif",
     silhouette: "ballgown",
     accentGradient:
-      "linear-gradient(135deg, rgba(255,235,239,1) 0%, rgba(89,75,104,0.9) 100%)",
+      "linear-gradient(135deg, rgba(250,246,239,1) 0%, rgba(142,126,178,0.85) 100%)",
     highlights: [
       "Corseted bodice with inner lacing",
       "Horsehair hem for dramatic flare",
@@ -231,9 +276,48 @@ export const DRESS_MODELS: DressModel[] = [
       },
     ],
     colors: [
-      { id: "opal", name: "Opal", swatch: "#f8e3ea" },
-      { id: "moonstone", name: "Moonstone", swatch: "#e9e7f2" },
-      { id: "noir", name: "Noir", swatch: "#1a181a" },
+      {
+        id: "baby-pink",
+        name: "Baby Pink",
+        swatch: "#f7c8d6",
+        secondary: "#fbe1ea",
+        image: "/images/valeria/baby-pink/WhatsApp Image 2025-12-10 at 15.58.55 (1).avif",
+      },
+      {
+        id: "black",
+        name: "Black",
+        swatch: "#111111",
+        secondary: "#2a2a2a",
+        image: "/images/valeria/black/WhatsApp Image 2025-11-24 at 20.41.21.avif",
+      },
+      {
+        id: "gold",
+        name: "Gold",
+        swatch: "#c8a24a",
+        secondary: "#e2c878",
+        image: "/images/valeria/gold/WhatsApp Image 2025-11-24 at 20.43.56.avif",
+      },
+      {
+        id: "lavender",
+        name: "Lavender",
+        swatch: "#b7a1d7",
+        secondary: "#d8c9ef",
+        image: "/images/valeria/lavender/IMG_3510.avif",
+      },
+      {
+        id: "milky",
+        name: "Milky",
+        swatch: "#f3efe6",
+        secondary: "#e6ded1",
+        image: "/images/valeria/milky/WhatsApp Image 2025-11-24 at 21.46.35.avif",
+      },
+      {
+        id: "olive",
+        name: "Olive",
+        swatch: "#7c7a4a",
+        secondary: "#a6a077",
+        image: "/images/valeria/olive/WhatsApp Image 2025-11-24 at 20.38.39.avif",
+      },
     ],
     lengths: [
       {

@@ -185,13 +185,13 @@ const HOME_COPY = {
       subline: "Handcrafted in Belgrade - Worldwide delivery",
       title: "Your body. Your measures. Four silhouettes to craft your dream dress.",
       description:
-        "Luma, Vara, Noor, and Solenne - signature models engineered to adapt to your shape. Configure fabrics, colors, and every centimeter of fit in a guided atelier experience built for zero guesswork.",
+        "Allure, Blush, Elegance, and Valeria - signature models engineered to adapt to your shape. Configure fabrics, colors, and every centimeter of fit in a guided atelier experience built for zero guesswork.",
       primaryCta: "Launch configurator",
       secondaryCta: "Explore silhouettes",
       overlayTag: "Jovana muse",
       overlayLabel: "featured look",
       overlayDescription: "Silk crepe column with draped shoulders and detachable sash.",
-      overlayChips: ["Noor edit", "Slate", "Atelier 12h"],
+      overlayChips: ["Elegance edit", "Pearl", "Atelier 12h"],
       imageAlt: "Model wearing a hand-tailored evening gown",
     },
     models: {
@@ -233,7 +233,7 @@ const HOME_COPY = {
       metricValues: ["92 cm", "70 cm", "98 cm", "8 cm"],
       fitScoreLabel: "fit confidence",
       fitSummary:
-        "Based on your Noor configuration with Tencel Sateen. Try adjusting bust or heel height for refined drape.",
+        "Based on your Elegance configuration with Tencel Sateen. Try adjusting bust or heel height for refined drape.",
     },
     aftercare: {
       badge: "aftercare",
@@ -253,13 +253,13 @@ const HOME_COPY = {
       subline: "Ručno rađeno u Beogradu — isporuka širom sveta",
       title: "Tvoje telo. Tvoje mere. Četiri siluete za haljinu iz snova.",
       description:
-        "Luma, Vara, Noor i Solenne — potpisani modeli projektovani da se prilagode tvojoj figuri. Konfiguriši tkanine, boje i svaki centimetar kroja uz vođeno atelje iskustvo bez nagađanja.",
+        "Allure, Blush, Elegance i Valeria — potpisani modeli projektovani da se prilagode tvojoj figuri. Konfiguriši tkanine, boje i svaki centimetar kroja uz vođeno atelje iskustvo bez nagađanja.",
       primaryCta: "Pokreni konfigurator",
       secondaryCta: "Istraži siluete",
       overlayTag: "Jovanina muza",
       overlayLabel: "izdvojeni look",
       overlayDescription: "Svileni krep u kolonskom kroju sa drapiranim ramenima i odvojivim pojasom.",
-      overlayChips: ["Noor edicija", "Škriljac", "Atelje 12h"],
+      overlayChips: ["Elegance edicija", "Biser", "Atelje 12h"],
       imageAlt: "Model u ručno šivanoj večernjoj haljini",
     },
     models: {
@@ -301,7 +301,7 @@ const HOME_COPY = {
       metricValues: ["92 cm", "70 cm", "98 cm", "8 cm"],
       fitScoreLabel: "sigurnost uklapanja",
       fitSummary:
-        "Zasnovano na tvojoj Noor konfiguraciji sa tencel satenom. Podesi obim grudi ili visinu štikle za još bolji pad.",
+        "Zasnovano na tvojoj Elegance konfiguraciji sa tencel satenom. Podesi obim grudi ili visinu štikle za još bolji pad.",
     },
     aftercare: {
       badge: "nega",
@@ -348,7 +348,7 @@ function HeroSection() {
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
-          src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80"
+          src="/images/elegance/pearl/WhatsApp Image 2025-11-24 at 21.37.19.avif"
           alt={copy.imageAlt}
           fill
           priority
@@ -416,8 +416,7 @@ function HeroSection() {
       <motion.div
         className="mt-4 grid gap-5 sm:mt-6 sm:grid-cols-2 lg:col-span-2 lg:mt-8 lg:grid-cols-3"
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        animate="visible"
         variants={{
           hidden: { opacity: 0, y: 24 },
           visible: {

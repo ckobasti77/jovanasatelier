@@ -1,4 +1,4 @@
-﻿import { useMemo } from "react";
+import { useMemo } from "react";
 
 import { useLanguage } from "@/components/language-provider";
 import {
@@ -21,151 +21,152 @@ type DressOverride = Partial<
 };
 
 const DRESS_OVERRIDES_SR: Record<string, DressOverride> = {
-  luma: {
-    tagLine: "Prozračna A-linija sa naglašenim strukom i lepršavom suknjom.",
+  allure: {
+    tagLine: "Prozracna A-linija sa naglasenim strukom i leprsavom suknjom.",
     description:
-      "Eterična silueta koja ističe struk i ostavlja dovoljno prostora za kretanje. Savršena za baštanske zabave i večernje koktele.",
+      "Etericna silueta koja istice struk i ostavlja dovoljno prostora za kretanje. Savrsena za bastanske zabave i vecernje koktele.",
     productionTime: "7-9 radnih dana",
     highlights: [
-      "Podesivi korset na leđima",
-      "Dvostruki sloj suknje lagane težine",
+      "Podesivi korset na ledima",
+      "Dvostruki sloj suknje lagane tezine",
       "Opcioni visoki prorez",
     ],
     fabrics: {
       "silk-chiffon": {
-        name: "Svileni šifon",
+        name: "Svileni sifon",
         description: "Providan i lagan sa mekanim padom.",
-        care: "Samo hemijsko čišćenje",
+        care: "Samo hemijsko ciscenje",
       },
       "eco-crepe": {
         name: "Eko krep",
-        description: "Održivi krep sa suptilnom teksturom.",
-        care: "Pranje u hladnoj vodi, blago čišćenje",
+        description: "Odrzivi krep sa suptilnom teksturom.",
+        care: "Pranje u hladnoj vodi, blago ciscenje",
       },
     },
     colors: {
-      midnight: { name: "Ponoćno plava" },
-      rosewater: { name: "Ružina rosa" },
-      ivory: { name: "Slonovača" },
+      red: { name: "Crvena" },
+      sauvage: { name: "Sauvage" },
+      volour: { name: "Velur" },
     },
     lengths: {
       midi: {
         name: "Midi",
-        description: "Do sredine lista za moderan i praktičan izgled.",
+        description: "Do sredine lista za moderan i praktican izgled.",
       },
       full: {
-        name: "Puna dužina",
-        description: "Do poda sa suptilnom opcijom šlepa.",
+        name: "Puna duzina",
+        description: "Do poda sa suptilnom opcijom slepa.",
       },
     },
   },
-  vara: {
+  blush: {
     tagLine: "Skrojena mermaid silueta sa couture savovima.",
     description:
-      "Haljina koja prati liniju tela i otvara se pri dnu, savršena za crvene tepihe i gala večeri.",
+      "Haljina koja prati liniju tela i otvara se pri dnu, savrsena za crvene tepihe i gala veceri.",
     productionTime: "10-12 radnih dana",
     highlights: [
-      "Ojačan korset za dodatnu strukturu",
-      "Nevidljiv rajsferšlus sa ručnom završnom obradom",
+      "Ojacan korset za dodatnu strukturu",
+      "Nevidljiv rajsferslus sa rucnom zavrsnom obradom",
       "Opcioni skidljivi overskirt",
     ],
     fabrics: {
       "duchesse-satin": {
         name: "Duces saten",
-        description: "Saten visokog sjaja sa dramatičnim volumenom.",
-        care: "Samo hemijsko čišćenje",
+        description: "Saten visokog sjaja sa dramaticnim volumenom.",
+        care: "Samo hemijsko ciscenje",
       },
       "matte-mikado": {
         name: "Mat mikado",
-        description: "Čvrst mikado koji oblikuje bez krutosti.",
-        care: "Čišćenje na fleke, preporučeno hemijsko ciscenje",
+        description: "Cvrst mikado koji oblikuje bez krutosti.",
+        care: "Ciscenje na fleke, preporuceno hemijsko ciscenje",
       },
     },
     colors: {
-      onyx: { name: "Oniks" },
-      ruby: { name: "Rubin" },
-      champagne: { name: "Šampanj" },
+      bloom: { name: "Bloom" },
+      red: { name: "Crvena" },
     },
     lengths: {
       full: {
-        name: "Puna dužina",
+        name: "Puna duzina",
         description: "Do poda uz opcioni slep duzine kapele.",
       },
     },
   },
-  noor: {
-    tagLine: "Minimalistička kolona sa arhitektonskim izrezom.",
+  elegance: {
+    tagLine: "Minimalisticka kolona sa arhitektonskim izrezom.",
     description:
-      "Kolonska haljina koja naglašava čiste linije i precizno krojenje. Radi podjednako dobro za gradska venčanja i umetničke događaje.",
+      "Kolonska haljina koja naglasava ciste linije i precizno krojenje. Radi podjednako dobro za gradska vencanja i umetnicke dogadaje.",
     productionTime: "8-10 radnih dana",
     highlights: [
-      "Ugrađena postava sa blago oblikovanom mrežom",
-      "Skriveni džepovi sa strane",
-      "Izrez može biti asimetrican ili ravan",
+      "Ugradena postava sa blago oblikovanom mrezom",
+      "Skriveni dzepovi sa strane",
+      "Izrez moze biti asimetrican ili ravan",
     ],
     fabrics: {
       "stretch-crepe": {
         name: "Stretch krep",
-        description: "Mekan krep sa taman dovoljno elastičnosti.",
-        care: "Ručno pranje u hladnoj vodi i susenje na ravnoj podlozi",
+        description: "Mekan krep sa taman dovoljno elasticnosti.",
+        care: "Rucno pranje u hladnoj vodi i susenje na ravnoj podlozi",
       },
       "tencel-sateen": {
         name: "Tencel saten",
-        description: "Održivii saten sa diskretnim sjajem.",
-        care: "Mašinsko pranje na blagom programu, susenje na ofingeru",
+        description: "Odrzivi saten sa diskretnim sjajem.",
+        care: "Masinsko pranje na blagom programu, susenje na ofingeru",
       },
     },
     colors: {
-      pearl: { name: "Biserna bela" },
-      slate: { name: "Grafit siva" },
-      sage: { name: "Kadulja" },
+      cocoa: { name: "Kakao" },
+      pearl: { name: "Biser" },
     },
     lengths: {
       knee: {
         name: "Iznad kolena",
-        description: "Doseže neposredno iznad kolena.",
+        description: "Doseze neposredno iznad kolena.",
       },
       tea: {
-        name: "Tea dužina",
-        description: "Pada do sredine potkolenice sa čistim ivicama.",
+        name: "Tea duzina",
+        description: "Pada do sredine potkolenice sa cistim ivicama.",
       },
       full: {
-        name: "Puna dužina",
+        name: "Puna duzina",
         description: "Uska silueta do poda.",
       },
     },
   },
-  solenne: {
-    tagLine: "Romantična balska haljina sa ručno postavljenim aplikacijama.",
+  valeria: {
+    tagLine: "Romanticna balska haljina sa rucno postavljenim aplikacijama.",
     description:
-      "Haljina inspirisana couture radionicama sa voluminoznim slojevima i bogatim floralnim detaljima. Za trenutke kada želiš da ostavis utisak.",
+      "Haljina inspirisana couture radionicama sa voluminoznim slojevima i bogatim detaljima. Za trenutke kada zelis da ostavis utisak.",
     productionTime: "12-15 radnih dana",
     highlights: [
-      "Korset sa unutrašnjim pertlanjem",
-      "Obod sa konjskom dlakom za dramatičan volumen",
+      "Korset sa unutrasnjim pertlanjem",
+      "Obod sa konjskom dlakom za dramatican volumen",
       "Opcione skidljive rukavice",
     ],
     fabrics: {
       "illusion-tulle": {
         name: "Iluzija til",
         description: "Lagan til sa suptilnim svetlucanjem.",
-        care: "Parenje bez dodira i čuvanje u zaštitnoj vreći",
+        care: "Parenje bez dodira i cuvanje u zastitnoj vreci",
       },
       organza: {
         name: "Organza",
-        description: "Čvrsta a providna, idealna za volumen.",
-        care: "Samo hemijsko čišćenje",
+        description: "Cvrsta a providna, idealna za volumen.",
+        care: "Samo hemijsko ciscenje",
       },
     },
     colors: {
-      opal: { name: "Opal" },
-      moonstone: { name: "Mesečev kamen" },
-      noir: { name: "Noir" },
+      "baby-pink": { name: "Baby roze" },
+      black: { name: "Crna" },
+      gold: { name: "Zlatna" },
+      lavender: { name: "Lavanda" },
+      milky: { name: "Mlecna" },
+      olive: { name: "Maslinasta" },
     },
     lengths: {
       grand: {
         name: "Grand",
-        description: "Puna dužina sa opcijom katedralnog šlepa.",
+        description: "Puna duzina sa opcijom katedralnog slepa.",
       },
     },
   },
@@ -227,3 +228,4 @@ export function useLocalizedDressModel(modelId: string): DressModel {
     return models.find((model) => model.id === modelId) ?? models[0];
   }, [models, modelId]);
 }
+

@@ -73,7 +73,7 @@ export function SiteHeader() {
       ? "whitespace-nowrap px-3 text-sm tracking-[0.06em]"
       : "whitespace-nowrap";
   const mobileNavLinkClass = cn(
-    "w-full rounded-2xl border border-border/40 bg-background/85 px-6 py-3 text-sm font-semibold uppercase text-foreground/75 transition hover:bg-foreground/10",
+    "w-full rounded-2xl border border-border/40 bg-background/95 px-6 py-3 text-sm font-semibold uppercase text-foreground/80 shadow-sm transition hover:bg-foreground/10",
     language === "sr" ? "tracking-[0.18em]" : "tracking-[0.22em]",
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -145,10 +145,12 @@ export function SiteHeader() {
           </Button>
         </div>
         <div className="flex items-center gap-2 md:hidden">
+          <LanguageToggle />
+          <ThemeToggle />
           <Button
             asChild
             size="sm"
-            className="flex-1 whitespace-nowrap px-4 text-sm tracking-[0.08em]"
+            className="whitespace-nowrap px-3 text-sm tracking-[0.08em]"
           >
             <Link href="/configurator">{ctas.design}</Link>
           </Button>
@@ -184,7 +186,7 @@ export function SiteHeader() {
                 <X className="h-5 w-5" />
               </Button>
             </div>
-            <nav className="flex flex-col gap-3">
+            <nav className="flex flex-col gap-3 rounded-3xl border border-border/40 bg-background/95 p-3 shadow-lg backdrop-blur">
               {navItems.map((item) => (
                 <Link
                   key={item.href}

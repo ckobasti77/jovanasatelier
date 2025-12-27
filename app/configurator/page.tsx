@@ -12,8 +12,8 @@ import { ModelSelector } from "@/components/configurator/model-selector";
 import { MeasurementsPanel } from "@/components/configurator/measurements-panel";
 import { PRODUCTION_TIMELINE_STEPS, ProductionTimeline } from "@/components/configurator/production-timeline";
 import { ReviewPanel } from "@/components/configurator/review-panel";
-import { Stepper } from "@/components/configurator/stepper";
 import { StyleSelector } from "@/components/configurator/style-selector";
+import { Stepper } from "@/components/configurator/stepper";
 import { SummaryCard } from "@/components/configurator/summary-card";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
@@ -22,17 +22,88 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DRESS_MODELS } from "@/lib/dress-data";
 import {
-  configuratorSchema,
   configuratorSteps,
+  getConfiguratorSchema,
   type ConfiguratorInput,
+  type ConfiguratorStepId,
   getFieldsForStep,
 } from "@/lib/configurator-schema";
-import { useConvexMutation } from "@/lib/convex-client";
+import { useConvexMutation, useConvexQuery } from "@/lib/convex-client";
 import { getErrorMessage } from "@/lib/error";
 import { useSessionToken } from "@/hooks/use-session-token";
 
 const ORDER_STATUS = "pending";
 const ORDER_STAGE = "configuration_submitted";
+const CONFIGURATOR_DRAFT_KEY = "jovana-configurator-draft";
+const CONFIGURATOR_DRAFT_VERSION = 1;
+const CONFIGURATOR_RETURN_KEY = "jovana-configurator-return";
+
+type ConfiguratorDraft = {
+  version: number;
+  updatedAt: number;
+  stepId: ConfiguratorStepId;
+  values: ConfiguratorInput;
+};
+
+function loadConfiguratorDraft() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  try {
+    const raw = window.localStorage.getItem(CONFIGURATOR_DRAFT_KEY);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw) as ConfiguratorDraft;
+    if (!parsed || parsed.version !== CONFIGURATOR_DRAFT_VERSION) {
+      return null;
+    }
+    if (!parsed.values || !parsed.stepId) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function saveConfiguratorDraft(draft: ConfiguratorDraft) {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.localStorage.setItem(CONFIGURATOR_DRAFT_KEY, JSON.stringify(draft));
+}
+
+function clearConfiguratorDraft() {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.localStorage.removeItem(CONFIGURATOR_DRAFT_KEY);
+}
+
+function getSameOriginPath(referrer: string, origin: string) {
+  if (!referrer) {
+    return null;
+  }
+  try {
+    const url = new URL(referrer);
+    if (url.origin !== origin) {
+      return null;
+    }
+    const path = `${url.pathname}${url.search}${url.hash}`;
+    return path || null;
+  } catch {
+    return null;
+  }
+}
+
+function isBlockedReturnPath(path: string) {
+  return (
+    path.startsWith("/configurator") ||
+    path.startsWith("/sign-in") ||
+    path.startsWith("/sign-up")
+  );
+}
 
 const CONFIG_COPY = {
   en: {
@@ -40,7 +111,7 @@ const CONFIG_COPY = {
     badge: "wizard",
     title: "Design your dress",
     description:
-      "Follow the guided steps to configure silhouette, materials, and custom measurements. Save your progress anytime and share the finished configuration with your atelier concierge.",
+      "Follow the guided steps to choose a silhouette and add custom measurements. Save your progress anytime and share the finished configuration with your atelier concierge.",
     secureTag: "secure atelier portal",
     previous: "Previous",
     next: "Next step",
@@ -63,7 +134,7 @@ const CONFIG_COPY = {
     badge: "čarobnjak",
     title: "Kreiraj svoju haljinu",
     description:
-      "Prođi kroz vođene korake i prilagodi siluetu, materijale i mere. Sačuvaj napredak i podeli finalnu konfiguraciju sa atelje timom.",
+      "Prodji kroz vodjene korake, izaberi siluetu i unesi mere. Sacuvaj napredak i podeli finalnu konfiguraciju sa atelje timom.",
     secureTag: "sigurni atelje portal",
     previous: "Prethodno",
     next: "Sledeći korak",
@@ -105,34 +176,45 @@ function ConfiguratorPageContent() {
   const searchParams = useSearchParams();
   const { language } = useLanguage();
   const copy = CONFIG_COPY[language];
+  const validationSchema = useMemo(() => getConfiguratorSchema(language), [language]);
   const createOrder = useConvexMutation("orders:create");
   const upsertProfile = useConvexMutation("profiles:upsert");
   const sessionToken = useSessionToken();
+  const viewer = useConvexQuery(
+    "session:viewer",
+    sessionToken === null ? { sessionToken: undefined } : { sessionToken },
+  ) as { user?: { role?: string | null } } | null | undefined;
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [hasRestoredDraft, setHasRestoredDraft] = useState(false);
+  const viewerReady = viewer !== undefined;
+  const viewerHasUser = Boolean(viewer?.user);
 
   useEffect(() => {
     setHasHydrated(true);
   }, []);
 
-  useEffect(() => {
-    if (!hasHydrated) return;
-    if (!sessionToken) {
-      router.replace("/sign-in");
-    }
-  }, [hasHydrated, sessionToken, router]);
-
   const modelFromUrl = searchParams.get("model");
+  const colorFromUrl = searchParams.get("color");
+  const stepFromUrl = searchParams.get("step");
+  const resumeFromAuth = searchParams.get("resume") === "1";
+  const searchParamString = searchParams.toString();
 
   const defaultModel =
     DRESS_MODELS.find((model) => model.slug === modelFromUrl) ?? DRESS_MODELS[0];
+  const hasValidColorFromUrl =
+    Boolean(colorFromUrl) &&
+    defaultModel.colors.some((color) => color.id === colorFromUrl);
+  const defaultColorId = hasValidColorFromUrl
+    ? colorFromUrl!
+    : defaultModel.colors[0]?.id ?? "";
 
   const methods = useForm<ConfiguratorInput>({
-    resolver: zodResolver(configuratorSchema),
+    resolver: zodResolver(validationSchema),
     mode: "onBlur",
     defaultValues: {
       modelId: defaultModel.id,
       fabricId: defaultModel.fabrics[0]?.id ?? "",
-      colorId: defaultModel.colors[0]?.id ?? "",
+      colorId: defaultColorId,
       lengthId: defaultModel.lengths[0]?.id ?? "",
       rushOrder: false,
       notes: "",
@@ -155,10 +237,83 @@ function ConfiguratorPageContent() {
     },
   });
 
-  const [activeStep, setActiveStep] = useState(0);
+  const initialStepIndex = useMemo(() => {
+    if (stepFromUrl) {
+      const normalized = stepFromUrl.toLowerCase();
+      const stepIndex = configuratorSteps.findIndex((step) => step.id === normalized);
+      if (stepIndex >= 0) {
+        return stepIndex;
+      }
+      const numericStep = Number(stepFromUrl);
+      if (
+        Number.isInteger(numericStep) &&
+        numericStep > 0 &&
+        numericStep <= configuratorSteps.length
+      ) {
+        return numericStep - 1;
+      }
+    }
+    if (hasValidColorFromUrl) {
+      const styleIndex = configuratorSteps.findIndex((step) => step.id === "style");
+      return styleIndex >= 0 ? styleIndex : 0;
+    }
+    return 0;
+  }, [stepFromUrl, hasValidColorFromUrl]);
+
+  const [activeStep, setActiveStep] = useState(initialStepIndex);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [successCode, setSuccessCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!hasHydrated || hasRestoredDraft || !resumeFromAuth) {
+      return;
+    }
+    const draft = loadConfiguratorDraft();
+    if (!draft) {
+      setHasRestoredDraft(true);
+      return;
+    }
+    const draftModel =
+      DRESS_MODELS.find((candidate) => candidate.id === draft.values.modelId) ?? null;
+    if (!draftModel) {
+      clearConfiguratorDraft();
+      setHasRestoredDraft(true);
+      return;
+    }
+    methods.reset(draft.values);
+    const stepIndex = configuratorSteps.findIndex((step) => step.id === draft.stepId);
+    if (stepIndex >= 0) {
+      setActiveStep(stepIndex);
+    }
+    const nextParams = new URLSearchParams(searchParamString);
+    nextParams.set("model", draftModel.slug);
+    nextParams.set("step", draft.stepId);
+    nextParams.set("resume", "1");
+    router.replace(`/configurator?${nextParams.toString()}`, { scroll: false });
+    setHasRestoredDraft(true);
+  }, [
+    hasHydrated,
+    hasRestoredDraft,
+    resumeFromAuth,
+    methods,
+    router,
+    searchParamString,
+  ]);
+
+  useEffect(() => {
+    if (!hasHydrated || typeof window === "undefined") {
+      return;
+    }
+    const referrerPath = getSameOriginPath(
+      document.referrer,
+      window.location.origin,
+    );
+    if (!referrerPath || isBlockedReturnPath(referrerPath)) {
+      return;
+    }
+    window.sessionStorage.setItem(CONFIGURATOR_RETURN_KEY, referrerPath);
+  }, [hasHydrated]);
 
   const modelId = methods.watch("modelId");
   const currentModel = useMemo(
@@ -225,17 +380,49 @@ function ConfiguratorPageContent() {
     setActiveStep((prev) => Math.max(prev - 1, 0));
   };
 
+  const handleBackToSite = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const storedReturn = window.sessionStorage.getItem(CONFIGURATOR_RETURN_KEY);
+    if (storedReturn && !isBlockedReturnPath(storedReturn)) {
+      router.push(storedReturn);
+      return;
+    }
+    const referrerPath = getSameOriginPath(
+      document.referrer,
+      window.location.origin,
+    );
+    if (referrerPath && !isBlockedReturnPath(referrerPath)) {
+      router.push(referrerPath);
+      return;
+    }
+    router.push("/");
+  };
+
   const handlePlaceOrder = methods.handleSubmit(async (values) => {
     setIsSubmitting(true);
     setSubmissionError(null);
     setSuccessCode(null);
 
     try {
-      if (!sessionToken) {
-        throw new Error(copy.errors.auth);
+      if (!sessionToken || (viewerReady && !viewerHasUser)) {
+        const draft: ConfiguratorDraft = {
+          version: CONFIGURATOR_DRAFT_VERSION,
+          updatedAt: Date.now(),
+          stepId: currentStep.id,
+          values: methods.getValues(),
+        };
+        if (hasHydrated) {
+          saveConfiguratorDraft(draft);
+        }
+        const returnTo = `/configurator?step=${currentStep.id}&resume=1&model=${currentModel.slug}`;
+        const authTarget = `/sign-in?intent=order&returnTo=${encodeURIComponent(returnTo)}`;
+        router.push(authTarget);
+        return;
       }
 
-      const parsed = configuratorSchema.parse(values);
+      const parsed = validationSchema.parse(values);
       const shouldSaveProfile = Boolean(parsed.saveMeasurementProfile);
       const model =
         DRESS_MODELS.find((candidate) => candidate.id === parsed.modelId) ??
@@ -350,6 +537,7 @@ function ConfiguratorPageContent() {
       });
 
       setSuccessCode(orderCode);
+      clearConfiguratorDraft();
     } catch (error) {
       setSubmissionError(getErrorMessage(error, copy.errors.generic));
     } finally {
@@ -367,7 +555,7 @@ function ConfiguratorPageContent() {
               variant="ghost"
               size="sm"
               className="w-full sm:w-auto"
-              onClick={() => router.back()}
+              onClick={handleBackToSite}
               aria-label={copy.backAria}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -483,4 +671,10 @@ export default function ConfiguratorPage() {
     </Suspense>
   );
 }
+
+
+
+
+
+
 

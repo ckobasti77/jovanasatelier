@@ -2,27 +2,118 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Loader2, Lock, Mail, Phone, Sparkles, UserRound } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLanguage } from "@/components/language-provider";
 import { useSessionToken } from "@/hooks/use-session-token";
 import { saveSessionToken } from "@/lib/auth-storage";
 import { useConvexMutation, useConvexQuery } from "@/lib/convex-client";
 import { getErrorMessage } from "@/lib/error";
 import { cn } from "@/lib/utils";
 
-const onboardingHighlights = [
-  "Craft multiple measurement profiles for different occasions",
-  "Save configuration drafts and share with friends",
-  "Unlock concierge styling sessions & alteration tokens",
-];
+const COPY = {
+  en: {
+    badge: "new muse",
+    heading: "Create your atelier profile.",
+    subheading:
+      "A single place to manage measurements, track bespoke orders, and reach your stylist team.",
+    highlights: [
+      "Craft multiple measurement profiles for different occasions",
+      "Save configuration drafts and share with friends",
+      "Unlock concierge styling sessions & alteration tokens",
+    ],
+    already: "Already part of the atelier?",
+    signIn: "Sign in instead",
+    orderNotice:
+      "Create an account to place your order. We saved your configuration and will return you to the final step.",
+    nameLabel: "Full name",
+    namePlaceholder: "Jovana Novak",
+    emailLabel: "Email address",
+    emailPlaceholder: "jovana@example.com",
+    phoneLabel: "Phone / WhatsApp",
+    phoneHelper: "Optional. Concierge will use this for fittings.",
+    phonePlaceholder: "+381 XX XXX",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Create a strong password",
+    confirmLabel: "Confirm password",
+    confirmPlaceholder: "Repeat password",
+    terms: "I agree with atelier terms and privacy policy.",
+    errorMissing: "Please complete all required fields to continue.",
+    errorMismatch: "Passwords need to match.",
+    errorFallback: "Unable to create account. Please try again.",
+    submit: "Create account",
+    submitLoading: "Creating account",
+  },
+  sr: {
+    badge: "nova muza",
+    heading: "Kreiraj svoj atelier profil.",
+    subheading:
+      "Jedno mesto za upravljanje merama, pracenje bespoke porudzbina i kontakt sa stilistima.",
+    highlights: [
+      "Napravi vise profila mera za razlicite prilike",
+      "Sacuvaj nacrte konfiguracija i podeli sa prijateljima",
+      "Otkljucaj concierge sesije i tokene za korekcije",
+    ],
+    already: "Vec si deo ateljea?",
+    signIn: "Prijavi se",
+    orderNotice:
+      "Napravi nalog da biste porucili. Sacuvali smo konfiguraciju i vraticemo vas na poslednji korak.",
+    nameLabel: "Ime i prezime",
+    namePlaceholder: "Jovana Novak",
+    emailLabel: "Email adresa",
+    emailPlaceholder: "jovana@example.com",
+    phoneLabel: "Telefon / WhatsApp",
+    phoneHelper: "Opcionalno. Concierge tim koristi ovo za probe.",
+    phonePlaceholder: "+381 XX XXX",
+    passwordLabel: "Lozinka",
+    passwordPlaceholder: "Kreiraj jaku lozinku",
+    confirmLabel: "Potvrdi lozinku",
+    confirmPlaceholder: "Ponovi lozinku",
+    terms: "Slazem se sa uslovima ateljea i politikom privatnosti.",
+    errorMissing: "Popunite sva obavezna polja da biste nastavili.",
+    errorMismatch: "Lozinke moraju da se podudaraju.",
+    errorFallback: "Ne mozemo da napravimo nalog. Pokusajte ponovo.",
+    submit: "Kreiraj nalog",
+    submitLoading: "Kreiranje naloga",
+  },
+} as const;
+
+const getSafeReturnTo = (value: string | null) => {
+  if (!value) {
+    return null;
+  }
+  if (!value.startsWith("/") || value.startsWith("//")) {
+    return null;
+  }
+  return value;
+};
+
+const buildAuthHref = (
+  base: string,
+  intent: string | null,
+  returnTo: string | null,
+) => {
+  const params = new URLSearchParams();
+  if (intent) {
+    params.set("intent", intent);
+  }
+  if (returnTo) {
+    params.set("returnTo", returnTo);
+  }
+  const query = params.toString();
+  return query ? `${base}?${query}` : base;
+};
 
 export default function SignUpPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { language } = useLanguage();
+  const copy = COPY[language];
   const signUp = useConvexMutation("auth:signUp");
   const sessionToken = useSessionToken();
   const viewer = useConvexQuery(
@@ -35,6 +126,14 @@ export default function SignUpPage() {
   const viewerReady = viewer !== undefined;
   const viewerHasUser = Boolean(viewer?.user);
   const viewerRole = viewer?.user?.role ?? null;
+  const intent = searchParams.get("intent");
+  const returnTo = getSafeReturnTo(searchParams.get("returnTo"));
+  const showOrderNotice = intent === "order";
+  const signInHref = buildAuthHref(
+    "/sign-in",
+    showOrderNotice ? "order" : null,
+    returnTo,
+  );
 
   useEffect(() => {
     setHasHydrated(true);
@@ -46,9 +145,17 @@ export default function SignUpPage() {
     if (!viewerReady) return;
     if (!viewerHasUser) return;
 
-    const target = viewerRole === "admin" ? "/admin" : "/portal";
+    const target = returnTo ?? (viewerRole === "admin" ? "/admin" : "/portal");
     router.replace(target);
-  }, [hasHydrated, sessionToken, viewerReady, viewerHasUser, viewerRole, router]);
+  }, [
+    hasHydrated,
+    sessionToken,
+    viewerReady,
+    viewerHasUser,
+    viewerRole,
+    returnTo,
+    router,
+  ]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -60,11 +167,11 @@ export default function SignUpPage() {
     const confirm = (form.get("confirmPassword") as string) ?? "";
 
     if (!name || !email || !password) {
-      setError("Please complete all required fields to continue.");
+      setError(copy.errorMissing);
       return;
     }
     if (password !== confirm) {
-      setError("Passwords need to match.");
+      setError(copy.errorMismatch);
       return;
     }
 
@@ -78,12 +185,12 @@ export default function SignUpPage() {
         phone: phone || undefined,
       });
       if (!result?.sessionToken) {
-        throw new Error("Unable to create account.");
+        throw new Error(copy.errorFallback);
       }
       saveSessionToken(result.sessionToken);
-      window.location.href = "/portal";
+      window.location.href = returnTo ?? "/portal";
     } catch (error) {
-      setError(getErrorMessage(error, "Unable to create account. Please try again."));
+      setError(getErrorMessage(error, copy.errorFallback));
       setIsSubmitting(false);
     }
   }
@@ -91,17 +198,17 @@ export default function SignUpPage() {
   return (
     <div className="grid gap-10 md:grid-cols-[1fr_0.9fr]">
       <div className="space-y-6">
-        <Badge className="uppercase tracking-[0.35em]">new muse</Badge>
+        <Badge className="uppercase tracking-[0.35em]">{copy.badge}</Badge>
         <div className="space-y-2">
           <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">
-            Create your atelier profile.
+            {copy.heading}
           </h2>
           <p className="text-sm text-foreground/70">
-            A single place to manage measurements, track bespoke orders, and reach your stylist team.
+            {copy.subheading}
           </p>
         </div>
         <ul className="space-y-3 text-sm text-foreground/70">
-          {onboardingHighlights.map((highlight) => (
+          {copy.highlights.map((highlight) => (
             <li key={highlight} className="flex items-start gap-3">
               <Sparkles className="mt-1 h-4 w-4 text-foreground/60" />
               <span>{highlight}</span>
@@ -109,45 +216,50 @@ export default function SignUpPage() {
           ))}
         </ul>
         <div className="text-xs uppercase tracking-[0.28em] text-foreground/50">
-          Already part of the atelier?{" "}
-          <Link href="/sign-in" className="text-foreground underline-offset-4 hover:underline">
-            Sign in instead
+          {copy.already}{" "}
+          <Link href={signInHref} className="text-foreground underline-offset-4 hover:underline">
+            {copy.signIn}
           </Link>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6 rounded-[28px] border border-border/50 bg-background/80 p-8">
+        {showOrderNotice ? (
+          <div className="rounded-2xl border border-amber-200 bg-amber-100/50 px-4 py-3 text-sm text-amber-800">
+            {copy.orderNotice}
+          </div>
+        ) : null}
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="name">Full name</Label>
+            <Label htmlFor="name">{copy.nameLabel}</Label>
             <Input
               id="name"
               name="name"
-              placeholder="Jovana Novak"
+              placeholder={copy.namePlaceholder}
               className="rounded-2xl pl-10"
               icon={<UserRound className="h-4 w-4 text-foreground/50" />}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">{copy.emailLabel}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="jovana@example.com"
+              placeholder={copy.emailPlaceholder}
               className="rounded-2xl pl-10"
               icon={<Mail className="h-4 w-4 text-foreground/50" />}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone" helper="Optional Â· Concierge will use this for fittings.">
-              Phone / WhatsApp
+            <Label htmlFor="phone" helper={copy.phoneHelper}>
+              {copy.phoneLabel}
             </Label>
             <Input
               id="phone"
               name="phone"
               type="tel"
-              placeholder="+381 XX XXX"
+              placeholder={copy.phonePlaceholder}
               className="rounded-2xl pl-10"
               icon={<Phone className="h-4 w-4 text-foreground/50" />}
             />
@@ -156,23 +268,23 @@ export default function SignUpPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{copy.passwordLabel}</Label>
             <Input
               id="password"
               name="password"
               type="password"
-              placeholder="Create a strong password"
+              placeholder={copy.passwordPlaceholder}
               className="rounded-2xl pl-10"
               icon={<Lock className="h-4 w-4 text-foreground/50" />}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm password</Label>
+            <Label htmlFor="confirmPassword">{copy.confirmLabel}</Label>
             <Input
               id="confirmPassword"
               name="confirmPassword"
               type="password"
-              placeholder="Repeat password"
+              placeholder={copy.confirmPlaceholder}
               className="rounded-2xl pl-10"
               icon={<Lock className="h-4 w-4 text-foreground/50" />}
             />
@@ -187,7 +299,7 @@ export default function SignUpPage() {
             className="mt-1 h-4 w-4 rounded border border-border/60 accent-foreground"
           />
           <span className="uppercase tracking-[0.28em]">
-            I agree with atelier terms and privacy policy.
+            {copy.terms}
           </span>
         </label>
 
@@ -205,11 +317,11 @@ export default function SignUpPage() {
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating account
+              {copy.submitLoading}
             </>
           ) : (
             <>
-              Create account
+              {copy.submit}
               <ArrowRight className="ml-2 h-4 w-4" />
             </>
           )}

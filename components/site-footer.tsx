@@ -1,4 +1,6 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import Link from "next/link";
 
 import { useLanguage } from "@/components/language-provider";
 import { Logo } from "./logo";
@@ -70,7 +72,7 @@ const FOOTER_COPY = {
 
 export function SiteFooter() {
   const { language } = useLanguage();
-  const footerLabel = language === "sr" ? "Jovanin Atelje" : "Jovana's Atelier";
+  const footerLabel = "JeVeux Couture";
   const copy = FOOTER_COPY[language];
 
   return (
@@ -107,3 +109,4 @@ export function SiteFooter() {
     </footer>
   );
 }
+

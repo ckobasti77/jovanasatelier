@@ -1,25 +1,24 @@
 ﻿"use client";
 
 import type { ComponentType } from "react";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 
-const MODES = ["system", "light", "dark"] as const;
+const MODES = ["light", "dark"] as const;
 
 const MODE_DETAILS: Record<
   (typeof MODES)[number],
   { label: string; icon: ComponentType<{ className?: string }> }
 > = {
-  system: { label: "Auto", icon: Monitor },
   light: { label: "Day", icon: Sun },
   dark: { label: "Night", icon: Moon },
 };
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const current = theme ?? "system";
+  const { resolvedTheme, setTheme } = useTheme();
+  const current = resolvedTheme;
   const nextIndex = (MODES.indexOf(current) + 1) % MODES.length;
   const nextMode = MODES[nextIndex];
 

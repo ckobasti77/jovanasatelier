@@ -14,9 +14,6 @@ const REVIEW_COPY = {
     description:
       "Make sure everything looks perfect. Once you place the order, we will send a confirmation and atelier PDF within minutes.",
     configuration: "configuration",
-    fabric: "Fabric",
-    color: "Color",
-    length: "Length",
     rush: "Rush order",
     rushRequested: "Requested",
     rushStandard: "Standard",
@@ -34,9 +31,6 @@ const REVIEW_COPY = {
     description:
       "Proveri da li je sve savršeno. Kada pošalješ porudžbinu, stiže potvrda i atelje PDF za nekoliko minuta.",
     configuration: "konfiguracija",
-    fabric: "Tkanina",
-    color: "Boja",
-    length: "Dužina",
     rush: "Hitna izrada",
     rushRequested: "Zahtevano",
     rushStandard: "Standard",
@@ -60,9 +54,6 @@ export function ReviewPanel({ modelId }: { modelId: string }) {
   const values = getValues();
 
   const model = useLocalizedDressModel(modelId);
-  const fabric = model.fabrics.find((item) => item.id === values.fabricId);
-  const color = model.colors.find((item) => item.id === values.colorId);
-  const length = model.lengths.find((item) => item.id === values.lengthId);
 
   const measurementEntries = measurementOrder.map((key) => ({
     key,
@@ -87,9 +78,7 @@ export function ReviewPanel({ modelId }: { modelId: string }) {
           </div>
         </CardHeader>
         <CardContent className="grid gap-4 text-sm text-foreground/75 md:grid-cols-2">
-          <ReviewRow label={copy.fabric} value={fabric?.name ?? copy.missingValue} />
-          <ReviewRow label={copy.color} value={color?.name ?? copy.missingValue} />
-          <ReviewRow label={copy.length} value={length?.name ?? copy.missingValue} />
+
           <ReviewRow
             label={copy.rush}
             value={values.rushOrder ? copy.rushRequested : copy.rushStandard}
@@ -151,3 +140,5 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+

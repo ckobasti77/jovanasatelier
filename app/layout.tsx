@@ -19,28 +19,31 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const title = "Jovana Atelier - Design-to-Fit Dresses";
+const title = "JeVeux Couture - Design-to-Fit Dresses";
 const description =
-  "Discover four signature silhouettes and tailor every measurement to your body. Configure fabric, color, and fit with Jovana Atelier's design-to-fit experience.";
+  "Discover four signature silhouettes and tailor every measurement to your body. Configure fabric, color, and fit with JeVeux Couture's design-to-fit experience.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jovana-atelier.example"),
   title: {
     default: title,
-    template: "%s | Jovana Atelier",
+    template: "%s | JeVeux Couture",
   },
   description,
+  icons: {
+    icon: "/logo.png",
+  },
   openGraph: {
     title,
     description,
     url: "https://jovana-atelier.example",
-    siteName: "Jovana Atelier",
+    siteName: "JeVeux Couture",
     images: [
       {
         url: "https://jovana-atelier.example/og.png",
         width: 1200,
         height: 630,
-        alt: "Jovana Atelier dress configurator preview",
+        alt: "JeVeux Couture dress configurator preview",
       },
     ],
     type: "website",

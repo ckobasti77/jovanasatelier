@@ -237,7 +237,7 @@ const PORTAL_COPY: Record<Language, PortalCopy> = {
       messageLabel: "Message",
       messageHelper: "Share the occasion, the fit concern, or the styling guidance you need.",
       messagePlaceholder:
-        "Need advice on styling Solenne for a winter ceremony or request a rush hem adjustment.",
+        "Need advice on styling Valeria for a winter ceremony or request a rush hem adjustment.",
       responseTime: "Our stylists respond within one business day.",
       contactLabel: "Preferred contact",
       contactHelper: "Where should we follow up? WhatsApp, email, or phone all work.",
@@ -318,13 +318,13 @@ const PORTAL_COPY: Record<Language, PortalCopy> = {
       heading: "Postavite pitanje stilisti ili rezervišite termin za prepravke.",
       messageLabel: "Poruka",
       messageHelper: "Podelite priliku, fit izazov ili smernice koje su vam potrebne.",
-      messagePlaceholder: "Treba vam savet za Solenne zimi ili hitno skraćivanje poruba?",
-      responseTime: "Naši stilisti odgovaraju u roku od jednog radnog dana.",
+      messagePlaceholder: "Treba vam savet za Valeria zimi ili hitno skraćivanje poruba?",
+      responseTime: "Naši stilisti odgoBlushju u roku od jednog radnog dana.",
       contactLabel: "Preferirani kontakt",
       contactHelper: "Kako da vas kontaktiramo? WhatsApp, email ili telefon.",
       contactPlaceholder: "WhatsApp +381 XX XXX",
       timeframeLabel: "Idealno vreme",
-      timeframeHelper: "Navedite kada vam najviše odgovara da vas pozovemo.",
+      timeframeHelper: "Navedite kada vam najviše odgoBlush da vas pozovemo.",
       timeframePlaceholder: "Ovaj vikend / Posle 18h",
       submitting: "Slanje",
       submit: "Pošalji zahtev",
@@ -346,8 +346,8 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
         {
           id: "OR-1027",
           orderCode: "OR-1027",
-          dressModel: "Noor",
-          color: "Slate Grey",
+          dressModel: "Elegance",
+          color: "Pearl",
           fabric: "Stretch Crepe",
           stage: "Sewing & detailing",
           etaLabel: "Delivery ETA - 12 Dec",
@@ -362,8 +362,8 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
         {
           id: "OR-1028",
           orderCode: "OR-1028",
-          dressModel: "Solenne",
-          color: "Opal",
+          dressModel: "Valeria",
+          color: "Milky",
           fabric: "Illusion Tulle",
           stage: "Cutting & prepping",
           etaLabel: "Delivery ETA - 18 Dec",
@@ -380,19 +380,19 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
       inspirations: [
         {
           id: "insp-1",
-          title: "Holiday Capsule - Vara",
-          description: "Ruby duchesse satin with detachable overskirt.",
+          title: "Holiday Capsule - Blush",
+          description: "Bloom duchesse satin with detachable overskirt.",
           url: "/lookbook",
         },
         {
           id: "insp-2",
-          title: "Fabric spotlight - Luma",
-          description: "Pair silk chiffon with pearl palette for airy motion.",
+          title: "Fabric spotlight - Allure",
+          description: "Pair silk chiffon with sauvage palette for airy motion.",
           url: "/lookbook",
         },
         {
           id: "insp-3",
-          title: "Care studio - Noor",
+          title: "Care studio - Elegance",
           description: "How to steam stretch crepe and keep lines sharp.",
           url: "/guides/care",
         },
@@ -403,8 +403,8 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
         {
           id: "OR-1027",
           orderCode: "OR-1027",
-          dressModel: "Noor",
-          color: "Sivo-plava",
+          dressModel: "Elegance",
+          color: "Biser",
           fabric: "Elastični krep",
           stage: "Sewing & detailing",
           etaLabel: "Planirana isporuka - 12. dec",
@@ -419,8 +419,8 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
         {
           id: "OR-1028",
           orderCode: "OR-1028",
-          dressModel: "Solenne",
-          color: "Opal",
+          dressModel: "Valeria",
+          color: "Mlecna",
           fabric: "Iluzija tila",
           stage: "Cutting & prepping",
           etaLabel: "Planirana isporuka - 18. dec",
@@ -437,19 +437,19 @@ const PORTAL_FALLBACKS: Record<Language, { orders: DashboardOrder[]; profiles: D
       inspirations: [
         {
           id: "insp-1",
-          title: "Praznična kapsula - Vara",
-          description: "Rubin saten dušes sa odvojivom suknjom.",
+          title: "Praznična kapsula - Blush",
+          description: "Bloom saten dušes sa odvojivom suknjom.",
           url: "/lookbook",
         },
         {
           id: "insp-2",
-          title: "U fokusu tkanina - Luma",
-          description: "Upari svilu šifon sa bisernom paletom za vazdušasti pokret.",
+          title: "U fokusu tkanina - Allure",
+          description: "Upari svilu šifon sa sauvage paletom za vazdušasti pokret.",
           url: "/lookbook",
         },
         {
           id: "insp-3",
-          title: "Studio nege - Noor",
+          title: "Studio nege - Elegance",
           description: "Kako da parom obradiš elastični krep i zadržiš čiste linije.",
           url: "/guides/care",
         },
@@ -1049,6 +1049,7 @@ export default function PortalPage() {
     </div>
   );
 }
+
 
 
 

@@ -10,57 +10,32 @@ import { cn } from "@/lib/utils";
 
 const STYLE_SELECTOR_COPY = {
   en: {
-    title: "Style the fabrics, palette, and length",
-    description:
-      "Mix and match fabrics, colors, and lengths. Micro-previews help you visualize drape, sheen, and movement.",
-    fabricTitle: "Fabric",
-    fabricDescription: "Texture, sheen, and care details help you choose the right base.",
+    title: "Choose a palette and add notes",
+    description: "Pick curated shades and add any atelier requests.",
     paletteTitle: "Palette",
     paletteDescription: "Choose from curated shades designed for this silhouette.",
-    lengthTitle: "Length",
-    lengthDescription: "Adjust hemlines for venue, movement, and footwear.",
     notesLabel: "Special notes",
     notesHelper: "Optional message to the atelier.",
     notesPlaceholder:
       "Add thoughts about sleeve adjustments, lining preferences, or styling requests...",
     rushLabel: "Rush atelier slot",
     rushDescription: "Need it sooner? We will confirm availability within 24 hours.",
-    hemlineEyebrow: "Hemline",
     chooseLabel: "Choose",
     selectedLabel: "Selected",
   },
   sr: {
-    title: "Oblikuj materijale, paletu i dužinu",
-    description:
-      "Kombinuj tkanine, boje i dužine. Mini-prikazi pomažu da vidiš pad, sjaj i kretanje materijala.",
-    fabricTitle: "Tkanina",
-    fabricDescription: "Tekstura, sjaj i održavanje vode te do prave osnove.",
+    title: "Izaberi paletu i dodaj napomene",
+    description: "Izaberi nijanse i dodaj poruku za atelje.",
     paletteTitle: "Paleta",
     paletteDescription: "Biraj nijanse kurirane baš za ovu siluetu.",
-    lengthTitle: "Dužina",
-    lengthDescription: "Prilagodi ivicu za prostor, kretanje i obuću.",
     notesLabel: "Posebne napomene",
     notesHelper: "Opcionalna poruka za atelje.",
     notesPlaceholder:
       "Dodaj ideje o rukavima, postavi, željama za stilizovanje...",
     rushLabel: "Hitni atelje termin",
     rushDescription: "Ako ti je potrebno ranije, potvrdićemo dostupnost u roku od 24 sata.",
-    hemlineEyebrow: "Linija poruba",
     chooseLabel: "Izaberi",
     selectedLabel: "Izabrano",
-  },
-} as const;
-
-const TEXTURE_LABELS = {
-  en: {
-    silky: "silky",
-    matte: "matte",
-    structured: "structured",
-  },
-  sr: {
-    silky: "svilenkasto",
-    matte: "mat",
-    structured: "strukturirano",
   },
 } as const;
 
@@ -131,9 +106,7 @@ export function StyleSelector({ modelId }: StyleSelectorProps) {
 
   const { control, register, setValue, watch } = useFormContext<ConfiguratorInput>();
 
-  const selectedFabricId = watch("fabricId");
   const selectedColorId = watch("colorId");
-  const selectedLengthId = watch("lengthId");
 
   const statusLabels = useMemo<StatusLabels>(
     () => ({
@@ -149,43 +122,6 @@ export function StyleSelector({ modelId }: StyleSelectorProps) {
         <h2 className="text-2xl font-semibold text-foreground">{copy.title}</h2>
         <p className="mt-1 text-sm text-foreground/70">{copy.description}</p>
       </div>
-
-      <section className="space-y-4">
-        <div className="space-y-2">
-          <Label className="text-xs uppercase tracking-[0.28em] text-foreground/55">
-            {copy.fabricTitle}
-          </Label>
-          <p className="text-sm text-foreground/70">{copy.fabricDescription}</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {model.fabrics.map((fabric) => {
-            const textureLabel = TEXTURE_LABELS[language][fabric.texture];
-            const metaParts = [
-              textureLabel,
-              fabric.upcharge ? `+EUR ${fabric.upcharge}` : undefined,
-              fabric.care,
-            ].filter(Boolean);
-            return (
-              <OptionCard
-                key={fabric.id}
-                eyebrow={textureLabel}
-                title={fabric.name}
-                description={fabric.description}
-                meta={metaParts.join(" | ")}
-                active={fabric.id === selectedFabricId}
-                statusLabels={statusLabels}
-                onSelect={() =>
-                  setValue("fabricId", fabric.id, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                    shouldValidate: true,
-                  })
-                }
-              />
-            );
-          })}
-        </div>
-      </section>
 
       <section className="space-y-4">
         <div className="space-y-2">
@@ -222,34 +158,6 @@ export function StyleSelector({ modelId }: StyleSelectorProps) {
                 <span className="text-xs text-foreground/55">{color.secondary ?? color.swatch}</span>
               </div>
             </OptionCard>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <div className="space-y-2">
-          <Label className="text-xs uppercase tracking-[0.28em] text-foreground/55">
-            {copy.lengthTitle}
-          </Label>
-          <p className="text-sm text-foreground/70">{copy.lengthDescription}</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {model.lengths.map((length) => (
-            <OptionCard
-              key={length.id}
-              eyebrow={copy.hemlineEyebrow}
-              title={length.name}
-              description={length.description}
-              active={length.id === selectedLengthId}
-              statusLabels={statusLabels}
-              onSelect={() =>
-                setValue("lengthId", length.id, {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                  shouldValidate: true,
-                })
-              }
-            />
           ))}
         </div>
       </section>

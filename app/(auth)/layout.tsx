@@ -8,13 +8,13 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const COPY = {
   en: {
-    brand: "Jovana Atelier",
+    brand: "JeVeux Couture",
     heading: "Couture portal access",
     themeLabel: "Theme",
     home: "Home",
   },
   sr: {
-    brand: "Jovana Atelier",
+    brand: "JeVeux Couture",
     heading: "Pristup couture portalu",
     themeLabel: "Tema",
     home: "Početna",

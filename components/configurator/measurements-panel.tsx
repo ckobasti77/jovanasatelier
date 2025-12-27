@@ -20,7 +20,6 @@ import { Label } from "@/components/ui/label";
 import { useMeasurementLabels } from "@/hooks/use-measurement-labels";
 import { useSessionToken } from "@/hooks/use-session-token";
 import { useConvexQuery } from "@/lib/convex-client";
-import { measurementTips } from "@/lib/measurements";
 
 const PANEL_COPY = {
   en: {
@@ -202,9 +201,7 @@ export function MeasurementsPanel() {
   const fitLevelCopy =
     copy.fitLevels[fitConfidence.level as keyof typeof copy.fitLevels];
   const highlightedKey = missingMeasurements[0];
-  const highlightedTip = highlightedKey
-    ? measurementTips[highlightedKey as keyof typeof measurementTips]
-    : undefined;
+  const highlightedTip = highlightedKey ? getHelper(highlightedKey) : undefined;
   const meterColor =
     fitConfidence.level === "high"
       ? "bg-emerald-400"
@@ -293,6 +290,7 @@ export function MeasurementsPanel() {
                   <Label
                     htmlFor={`measurement-${fieldKey}`}
                     helper={getHelper(fieldKey)}
+                    className="min-h-[3.5rem]"
                   >
                     {getLabel(fieldKey)}
                   </Label>
@@ -413,6 +411,7 @@ export function MeasurementsPanel() {
                 <Label
                   htmlFor="profile-cup"
                   helper={copy.bodyFields.braCup.helper}
+                  className="min-h-[3.5rem]"
                 >
                   {copy.bodyFields.braCup.label}
                 </Label>
@@ -420,7 +419,7 @@ export function MeasurementsPanel() {
                   id="profile-cup"
                   value={field.value ?? ""}
                   onChange={(event) => field.onChange(event.target.value || undefined)}
-                  className="h-11 rounded-xl border border-border/60 bg-background/95 px-4 text-sm text-foreground focus:border-foreground/60 focus:outline-none focus:ring-4 focus:ring-foreground/10"
+                  className="h-11 w-full rounded-xl border border-border/60 bg-background/95 px-4 text-sm text-foreground focus:border-foreground/60 focus:outline-none focus:ring-4 focus:ring-foreground/10"
                 >
                   <option value="">{copy.bodyFields.braCup.select}</option>
                   {["AA", "A", "B", "C", "D", "DD", "E", "F"].map((cup) => (
@@ -474,7 +473,7 @@ function MeasurementField({
 }: MeasurementFieldProps) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} helper={helper}>
+      <Label htmlFor={id} helper={helper} className="min-h-[3.5rem]">
         {label}
       </Label>
       <Input
@@ -494,3 +493,7 @@ function MeasurementField({
     </div>
   );
 }
+
+
+
+

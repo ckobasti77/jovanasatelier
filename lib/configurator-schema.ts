@@ -1,23 +1,56 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 
-import { bodyProfileSchema, measurementSchema } from "@/lib/measurements";
-import type { BodyProfileValues } from "@/lib/measurements";
+import {
+  createBodyProfileSchema,
+  createMeasurementSchema,
+  type BodyProfileValues,
+  type MeasurementLocale,
+} from "@/lib/measurements";
 
-export const configuratorSchema = z.object({
-  modelId: z.string().min(1, "Select a dress model"),
-  fabricId: z.string().min(1, "Select a fabric option"),
-  colorId: z.string().min(1, "Select a color"),
-  lengthId: z.string().min(1, "Select a length"),
-  rushOrder: z.boolean().default(false),
-  notes: z
-    .string()
-    .max(600, "Notes should stay under 600 characters")
-    .optional()
-    .or(z.literal("")),
-  measurements: measurementSchema,
-  bodyProfile: bodyProfileSchema.partial().optional(),
-  saveMeasurementProfile: z.boolean().optional(),
-});
+const CONFIGURATOR_VALIDATION_COPY: Record<
+  MeasurementLocale,
+  {
+    model: string;
+    fabric: string;
+    color: string;
+    length: string;
+    notes: string;
+  }
+> = {
+  en: {
+    model: "Select a dress model",
+    fabric: "Select a fabric option",
+    color: "Select a color",
+    length: "Select a length",
+    notes: "Notes should stay under 600 characters",
+  },
+  sr: {
+    model: "Izaberi model haljine",
+    fabric: "Izaberi tkaninu",
+    color: "Izaberi boju",
+    length: "Izaberi dužinu",
+    notes: "Napomene mogu imati najviše 600 karaktera",
+  },
+};
+
+const createConfiguratorSchema = (language: MeasurementLocale) => {
+  const copy = CONFIGURATOR_VALIDATION_COPY[language];
+  return z.object({
+    modelId: z.string().min(1, copy.model),
+    fabricId: z.string().min(1, copy.fabric),
+    colorId: z.string().min(1, copy.color),
+    lengthId: z.string().min(1, copy.length),
+    rushOrder: z.boolean().default(false),
+    notes: z.string().max(600, copy.notes).optional().or(z.literal("")),
+    measurements: createMeasurementSchema(language),
+    bodyProfile: createBodyProfileSchema(language).partial().optional(),
+    saveMeasurementProfile: z.boolean().optional(),
+  });
+};
+
+export const configuratorSchema = createConfiguratorSchema("en");
+export const getConfiguratorSchema = (language: MeasurementLocale) =>
+  createConfiguratorSchema(language);
 
 export type ConfiguratorInput = z.input<typeof configuratorSchema>;
 export type ConfiguratorOutput = z.infer<typeof configuratorSchema>;
@@ -122,7 +155,7 @@ export function getFieldsForStep(stepId: ConfiguratorStepId): ConfiguratorFieldP
     case "model":
       return ["modelId"];
     case "style":
-      return ["fabricId", "colorId", "lengthId"];
+      return ["fabricId", "colorId", "lengthId", "notes"];
     case "measure":
       return measurementOrder.map(
         (key) => `measurements.${key}` as MeasurementFieldPath,

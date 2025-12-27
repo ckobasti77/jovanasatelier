@@ -1,6 +1,85 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 
-export const measurementNumber = (label: string, min: number, max: number) =>
+export type MeasurementLocale = "en" | "sr";
+
+type MeasurementKey =
+  | "bust"
+  | "underbust"
+  | "waist"
+  | "hips"
+  | "hollowToFloor"
+  | "height"
+  | "preferredHeel";
+
+type BodyProfileKey = "height" | "weight" | "braBand" | "braCup";
+
+type MeasurementMessageTemplates = {
+  min: (label: string, min: number) => string;
+  max: (label: string, max: number) => string;
+};
+
+const MEASUREMENT_MESSAGE_TEMPLATES: Record<
+  MeasurementLocale,
+  MeasurementMessageTemplates
+> = {
+  en: {
+    min: (label, min) => `${label} must be at least ${min} cm`,
+    max: (label, max) => `${label} must be below ${max} cm`,
+  },
+  sr: {
+    min: (label, min) => `${label} mora biti najmanje ${min} cm`,
+    max: (label, max) => `${label} mora biti najviše ${max} cm`,
+  },
+};
+
+const MEASUREMENT_VALIDATION_LABELS: Record<
+  MeasurementLocale,
+  Record<MeasurementKey, string>
+> = {
+  en: {
+    bust: "Bust",
+    underbust: "Underbust",
+    waist: "Waist",
+    hips: "Hips",
+    hollowToFloor: "Hollow-to-floor",
+    height: "Height",
+    preferredHeel: "Heel height",
+  },
+  sr: {
+    bust: "Obim grudi",
+    underbust: "Ispod grudi",
+    waist: "Struk",
+    hips: "Kukovi",
+    hollowToFloor: "Od kljucne kosti do poda",
+    height: "Visina",
+    preferredHeel: "Visina štikle",
+  },
+};
+
+const BODY_PROFILE_VALIDATION_LABELS: Record<
+  MeasurementLocale,
+  Record<BodyProfileKey, string>
+> = {
+  en: {
+    height: "Height",
+    weight: "Weight",
+    braBand: "Bra band",
+    braCup: "Bra cup",
+  },
+  sr: {
+    height: "Visina",
+    weight: "Težina",
+    braBand: "Obim grudnjaka",
+    braCup: "Korpa grudnjaka",
+  },
+};
+
+export const measurementNumber = (
+  label: string,
+  min: number,
+  max: number,
+  messages: MeasurementMessageTemplates = MEASUREMENT_MESSAGE_TEMPLATES.en,
+) =>
   z.preprocess(
     (value) => {
       if (value === "" || value === null || typeof value === "undefined") {
@@ -12,30 +91,39 @@ export const measurementNumber = (label: string, min: number, max: number) =>
       }
       return value;
     },
-    z
-      .number()
-      .min(min, `${label} must be at least ${min} cm`)
-      .max(max, `${label} must be below ${max} cm`),
+    z.number().min(min, messages.min(label, min)).max(max, messages.max(label, max)),
   );
 
-export const measurementSchema = z.object({
-  bust: measurementNumber("Bust", 70, 130),
-  underbust: measurementNumber("Underbust", 60, 120),
-  waist: measurementNumber("Waist", 50, 115),
-  hips: measurementNumber("Hips", 75, 140),
-  hollowToFloor: measurementNumber("Hollow-to-floor", 120, 170),
-  height: measurementNumber("Height", 150, 190),
-  preferredHeel: measurementNumber("Heel height", 0, 15),
-});
+export const createMeasurementSchema = (language: MeasurementLocale) => {
+  const labels = MEASUREMENT_VALIDATION_LABELS[language];
+  const messages = MEASUREMENT_MESSAGE_TEMPLATES[language];
+  return z.object({
+    bust: measurementNumber(labels.bust, 70, 130, messages),
+    underbust: measurementNumber(labels.underbust, 60, 120, messages),
+    waist: measurementNumber(labels.waist, 50, 115, messages),
+    hips: measurementNumber(labels.hips, 75, 140, messages),
+    hollowToFloor: measurementNumber(labels.hollowToFloor, 120, 170, messages),
+    height: measurementNumber(labels.height, 150, 190, messages),
+    preferredHeel: measurementNumber(labels.preferredHeel, 0, 15, messages),
+  });
+};
+
+export const measurementSchema = createMeasurementSchema("en");
 
 export type MeasurementValues = z.infer<typeof measurementSchema>;
 
-export const bodyProfileSchema = z.object({
-  height: measurementNumber("Height", 145, 200),
-  weight: measurementNumber("Weight", 38, 130),
-  braBand: measurementNumber("Bra band", 60, 110),
-  braCup: z.enum(["AA", "A", "B", "C", "D", "DD", "E", "F"]),
-});
+export const createBodyProfileSchema = (language: MeasurementLocale) => {
+  const labels = BODY_PROFILE_VALIDATION_LABELS[language];
+  const messages = MEASUREMENT_MESSAGE_TEMPLATES[language];
+  return z.object({
+    height: measurementNumber(labels.height, 145, 200, messages),
+    weight: measurementNumber(labels.weight, 38, 130, messages),
+    braBand: measurementNumber(labels.braBand, 60, 110, messages),
+    braCup: z.enum(["AA", "A", "B", "C", "D", "DD", "E", "F"]),
+  });
+};
+
+export const bodyProfileSchema = createBodyProfileSchema("en");
 
 export type BodyProfileValues = z.infer<typeof bodyProfileSchema>;
 
