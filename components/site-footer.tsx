@@ -102,9 +102,12 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-border/60 bg-background/90">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl justify-items-center gap-8 px-4 py-12 text-center sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr_1fr] md:justify-items-start md:text-left">
         <div className="space-y-4">
-          <Link href="/" className="group flex items-center gap-3 md:gap-4">
+          <Link
+            href="/"
+            className="group flex items-center justify-center gap-3 md:justify-start md:gap-4"
+          >
             <Logo className="transition group-hover:scale-[1.02]" />
           </Link>
         </div>
@@ -120,7 +123,7 @@ export function SiteFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="flex items-center gap-2 transition hover:text-foreground"
+                      className="flex items-center justify-center gap-2 transition hover:text-foreground md:justify-start"
                     >
                       {Icon ? (
                         <Icon className="h-4 w-4 text-foreground/50" />
