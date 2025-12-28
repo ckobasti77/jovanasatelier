@@ -174,7 +174,10 @@ export function SiteHeader() {
                 className="group flex items-center gap-3"
                 onClick={closeMobileMenu}
               >
-                <Logo className="h-10 w-auto transition group-hover:scale-[1.02]" />
+                <Logo
+                  className="h-10 w-auto transition group-hover:scale-[1.02]"
+                  showTextOnMobile
+                />
               </Link>
               <Button
                 variant="ghost"

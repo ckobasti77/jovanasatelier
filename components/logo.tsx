@@ -14,10 +14,15 @@ const brandSerif = Cormorant_Garamond({
 type LogoProps = {
   className?: string;
   subtitle?: string;
+  showTextOnMobile?: boolean;
 };
 
-export function Logo({ className, subtitle }: LogoProps) {
+export function Logo({ className, subtitle, showTextOnMobile }: LogoProps) {
   const secondaryLabel = "Couture";
+  const textWrapperClass = cn(
+    "flex-col",
+    showTextOnMobile ? "flex" : "hidden md:flex",
+  );
 
   return (
     <div className={cn("flex items-center gap-3 leading-tight", className)}>
@@ -29,7 +34,7 @@ export function Logo({ className, subtitle }: LogoProps) {
         className="h-12 w-12 md:h-20 md:w-20 shrink-0 object-contain [filter:drop-shadow(0_0_0.75px_rgba(0,0,0,0.9))] dark:[filter:drop-shadow(0_0_0.75px_rgba(255,255,255,0.95))]"
         priority
       />
-      <div className="hidden md:flex flex-col">
+      <div className={textWrapperClass}>
         <Image
           src="/logo-text.png"
           alt="JeVeux"
