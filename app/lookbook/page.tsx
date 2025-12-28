@@ -108,7 +108,7 @@ export default function LookbookPage() {
       <SiteHeader />
       <main className="mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-6xl flex-col gap-14 px-4 pb-28 pt-14 sm:gap-16 sm:px-6 sm:pb-32 sm:pt-20 lg:gap-20">
         <section
-          className="relative overflow-hidden rounded-[32px] border border-border/50 p-6 sm:p-10 lg:p-14"
+          className="relative overflow-hidden rounded-[32px] border border-border/50 p-8 sm:p-12 lg:min-h-[340px] lg:p-16"
           style={{ backgroundImage: "var(--hero-surface)" }}
         >
           <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
@@ -130,7 +130,11 @@ export default function LookbookPage() {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <Button asChild size="md" className="w-full sm:w-auto">
+              <Button
+                asChild
+                size="lg"
+                className="w-full shadow-[0_20px_50px_-30px_rgba(15,23,42,0.6)] sm:w-auto"
+              >
                 <Link href="/configurator">{copy.cta}</Link>
               </Button>
             </div>

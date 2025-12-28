@@ -7,7 +7,10 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
+  BookOpen,
   Clock,
+  FileText,
+  HelpCircle,
   Layers3,
   MoveRight,
   Palette,
@@ -178,6 +181,45 @@ const AFTERCARE_CARDS = [
   },
 ] as const;
 
+const STUDIO_LINKS = [
+  {
+    href: "/o-jeveux",
+    icon: BookOpen,
+    copy: {
+      en: {
+        title: "About JeVeux",
+        description:
+          "Our origin, values, and the couture approach behind every silhouette.",
+        cta: "Read our story",
+      },
+      sr: {
+        title: "O JeVeux",
+        description:
+          "Poreklo, vrednosti i couture pristup iza svakog modela.",
+        cta: "Procitaj pricu",
+      },
+    },
+  },
+  {
+    href: "/press-kit",
+    icon: FileText,
+    copy: {
+      en: {
+        title: "Press kit",
+        description:
+          "Logos, imagery, and brand facts for editors and partners.",
+        cta: "Open press kit",
+      },
+      sr: {
+        title: "Press kit",
+        description:
+          "Logo materijali, fotografije i cinjenice za medije i partnere.",
+        cta: "Otvori press kit",
+      },
+    },
+  },
+] as const;
+
 const HOME_COPY = {
   en: {
     hero: {
@@ -211,6 +253,26 @@ const HOME_COPY = {
       badge: "process",
       heading: "A guided journey from spark to finished garment.",
       footerLabel: "guided & interactive",
+    },
+    lookbook: {
+      badge: "lookbook",
+      heading: "See every silhouette in motion.",
+      description:
+        "Browse real configurations, colors, and styling details in our live lookbook.",
+      cta: "Open lookbook",
+    },
+    studio: {
+      badge: "studio",
+      heading: "Inside the JeVeux house.",
+      description:
+        "Meet the story behind the atelier and access official brand assets.",
+    },
+    faq: {
+      badge: "faq",
+      heading: "Questions, answered.",
+      description:
+        "Sizing, timelines, shipping, and customization details in one place.",
+      cta: "Read the FAQ",
     },
     fit: {
       badge: "fit assistant",
@@ -276,6 +338,26 @@ const HOME_COPY = {
       heading: "Vodeno putovanje od iskre do zavrsene haljine.",
       footerLabel: "vodeno & interaktivno",
     },
+    lookbook: {
+      badge: "lookbook",
+      heading: "Pogledaj svaki model u pokretu.",
+      description:
+        "Prelistaj stvarne konfiguracije, boje i stajling detalje u live lookbook-u.",
+      cta: "Otvori lookbook",
+    },
+    studio: {
+      badge: "atelje",
+      heading: "Iza JeVeux ateljea.",
+      description:
+        "Upoznaj pricu o brendu i pristupi zvanicnim press materijalima.",
+    },
+    faq: {
+      badge: "pitanja",
+      heading: "Odgovori na najcesca pitanja.",
+      description:
+        "Rokovi, isporuka, izrade i personalizacija na jednom mestu.",
+      cta: "Procitaj FAQ",
+    },
     fit: {
       badge: "fit asistent",
       heading: "Inteligentno vodenje za lako uzimanje mera.",
@@ -316,7 +398,10 @@ export default function Home() {
       <main className="mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-6xl flex-col gap-16 px-4 pb-28 pt-14 sm:gap-20 sm:px-6 sm:pb-32 sm:pt-20 lg:gap-24">
         <HeroSection />
         <ModelsSection />
+        <LookbookSection />
         <ConfiguratorProcess />
+        <StudioLinksSection />
+        <FaqSection />
         <FitAssistantHighlight />
         <AftercareSection />
       </main>
@@ -589,6 +674,42 @@ function ModelsSection() {
     </section>
   );
 }
+
+function LookbookSection() {
+  const { language } = useLanguage();
+  const copy = HOME_COPY[language].lookbook;
+  return (
+    <section
+      id="lookbook"
+      className="rounded-[24px] border border-border/50 bg-background/80 p-6 sm:p-8 md:p-10"
+    >
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/40 bg-foreground/10 text-foreground">
+              <BookOpen className="h-5 w-5" />
+            </span>
+            <Badge variant="outline" className="w-fit uppercase tracking-[0.35em]">
+              {copy.badge}
+            </Badge>
+          </div>
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            {copy.heading}
+          </h2>
+          <p className="max-w-2xl text-sm text-foreground/70">
+            {copy.description}
+          </p>
+        </div>
+        <Button asChild size="lg" className="w-full md:w-auto">
+          <Link href="/lookbook">
+            {copy.cta}
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
+    </section>
+  );
+}
 function DetailRow({
   label,
   children,
@@ -644,6 +765,96 @@ function ConfiguratorProcess() {
             </Card>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+function StudioLinksSection() {
+  const { language } = useLanguage();
+  const copy = HOME_COPY[language].studio;
+  return (
+    <section id="studio" className="space-y-8">
+      <div className="flex flex-col gap-3">
+        <Badge variant="outline" className="w-fit uppercase tracking-[0.35em]">
+          {copy.badge}
+        </Badge>
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          {copy.heading}
+        </h2>
+        <p className="max-w-2xl text-sm text-foreground/70">
+          {copy.description}
+        </p>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        {STUDIO_LINKS.map((item) => {
+          const itemCopy = item.copy[language];
+          const Icon = item.icon;
+          return (
+            <Card key={itemCopy.title} className="border-border/40 bg-background/85">
+              <CardHeader className="space-y-4 p-6 pb-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/40 bg-foreground/10 text-foreground">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {itemCopy.title}
+                  </h3>
+                </div>
+                <p className="text-sm text-foreground/70">{itemCopy.description}</p>
+              </CardHeader>
+              <CardFooter className="p-6 pt-0">
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="w-full border border-foreground/15 sm:w-fit"
+                >
+                  <Link href={item.href}>
+                    {itemCopy.cta}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function FaqSection() {
+  const { language } = useLanguage();
+  const copy = HOME_COPY[language].faq;
+  return (
+    <section
+      id="faq"
+      className="rounded-[24px] border border-border/50 bg-background/80 p-6 sm:p-8"
+    >
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/40 bg-foreground/10 text-foreground">
+              <HelpCircle className="h-5 w-5" />
+            </span>
+            <Badge variant="outline" className="w-fit uppercase tracking-[0.35em]">
+              {copy.badge}
+            </Badge>
+          </div>
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            {copy.heading}
+          </h2>
+          <p className="max-w-2xl text-sm text-foreground/70">
+            {copy.description}
+          </p>
+        </div>
+        <Button asChild className="w-full md:w-auto">
+          <Link href="/faq">
+            {copy.cta}
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
       </div>
     </section>
   );
