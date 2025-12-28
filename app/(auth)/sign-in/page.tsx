@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
@@ -33,7 +33,7 @@ const COPY = {
       "Please sign in to place your order. We saved your configuration and will return you to the final step.",
     emailLabel: "Email address",
     emailHelper: "We will send order updates and fittings to this email.",
-    emailPlaceholder: "jovana@example.com",
+    emailPlaceholder: "hello@example.com",
     passwordLabel: "Password",
     passwordHelper: "Minimum 10 characters.",
     passwordPlaceholder: "Your secure password",
@@ -60,7 +60,7 @@ const COPY = {
       "Prijavite se da biste porucili. Sacuvali smo konfiguraciju i vraticemo vas na poslednji korak.",
     emailLabel: "Email adresa",
     emailHelper: "Na ovaj email saljemo novosti o porudzbini i termine za probu.",
-    emailPlaceholder: "jovana@example.com",
+    emailPlaceholder: "hello@example.com",
     passwordLabel: "Lozinka",
     passwordHelper: "Najmanje 10 karaktera.",
     passwordPlaceholder: "Vasa sigurna lozinka",
@@ -168,7 +168,7 @@ function SignInPageContent() {
       saveSessionToken(result.sessionToken);
       window.location.href = returnTo ?? "/portal";
     } catch (error) {
-      setError(getErrorMessage(error, copy.errorFallback));
+      setError(getErrorMessage(error, copy.errorFallback, language));
       setIsSubmitting(false);
     }
   }
@@ -235,8 +235,8 @@ function SignInPageContent() {
             icon={<Lock className="h-4 w-4 text-foreground/50" />}
           />
         </div>
-        <div className="flex items-center justify-between text-xs uppercase tracking-[0.28em] text-foreground/55">
-          <label className="flex items-center gap-2">
+        <div className="flex gap-3 items-center justify-between text-xs uppercase tracking-[0.28em] text-foreground/55">
+          <label className="flex items-center gap-2 text-nowrap">
             <input
               type="checkbox"
               name="remember"
@@ -284,3 +284,4 @@ export default function SignInPage() {
     </Suspense>
   );
 }
+

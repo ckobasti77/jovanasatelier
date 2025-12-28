@@ -15,16 +15,16 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = {
   en: [
-    { href: "#models", label: "Models" },
-    { href: "#process", label: "How it works" },
-    { href: "#fit", label: "Fit assistant" },
-    { href: "#aftercare", label: "Aftercare" },
+    { href: "/#models", label: "Models" },
+    { href: "/#process", label: "How it works" },
+    { href: "/#fit", label: "Fit assistant" },
+    { href: "/#aftercare", label: "Aftercare" },
   ],
   sr: [
-    { href: "#models", label: "Modeli" },
-    { href: "#process", label: "Kako funkcionise" },
-    { href: "#fit", label: "Asistent za mere" },
-    { href: "#aftercare", label: "Negovanje" },
+    { href: "/#models", label: "Modeli" },
+    { href: "/#process", label: "Kako funkcionise" },
+    { href: "/#fit", label: "Asistent za mere" },
+    { href: "/#aftercare", label: "Negovanje" },
   ],
 } as const;
 
@@ -93,7 +93,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-gradient-to-b from-background/95 via-background/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center gap-3 px-4 py-4 sm:px-6 md:gap-6 md:py-6">
+      <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 py-4 sm:px-6 md:py-6">
         <div className="flex flex-1 items-center gap-2 md:gap-3">
           <Button
             variant="ghost"
@@ -125,7 +125,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center justify-end gap-2.5 md:flex md:gap-3.5">
+        <div className="hidden items-center justify-end gap-1 md:flex">
           <div className="flex items-center gap-2">
             <LanguageToggle />
             <ThemeToggle />

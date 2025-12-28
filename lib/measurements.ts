@@ -14,6 +14,8 @@ type MeasurementKey =
 type BodyProfileKey = "height" | "weight" | "braBand" | "braCup";
 
 type MeasurementMessageTemplates = {
+  required: (label: string) => string;
+  invalid: (label: string) => string;
   min: (label: string, min: number) => string;
   max: (label: string, max: number) => string;
 };
@@ -23,10 +25,14 @@ const MEASUREMENT_MESSAGE_TEMPLATES: Record<
   MeasurementMessageTemplates
 > = {
   en: {
+    required: (label) => `${label} is required`,
+    invalid: (label) => `${label} must be a number`,
     min: (label, min) => `${label} must be at least ${min} cm`,
     max: (label, max) => `${label} must be below ${max} cm`,
   },
   sr: {
+    required: (label) => `${label} je obavezno`,
+    invalid: (label) => `${label} mora biti broj`,
     min: (label, min) => `${label} mora biti najmanje ${min} cm`,
     max: (label, max) => `${label} mora biti najviše ${max} cm`,
   },
@@ -91,7 +97,15 @@ export const measurementNumber = (
       }
       return value;
     },
-    z.number().min(min, messages.min(label, min)).max(max, messages.max(label, max)),
+    z
+      .number(messages.invalid(label))
+      .min(min, messages.min(label, min))
+      .max(max, messages.max(label, max))
+      .optional()
+      .refine((value): value is number => typeof value === "number", {
+        message: messages.required(label),
+      })
+      .transform((value) => value as number),
   );
 
 export const createMeasurementSchema = (language: MeasurementLocale) => {
@@ -127,23 +141,44 @@ export const bodyProfileSchema = createBodyProfileSchema("en");
 
 export type BodyProfileValues = z.infer<typeof bodyProfileSchema>;
 
-export const measurementProfileSchema = z.object({
-  label: z
-    .string()
-    .min(2, "Label must have at least 2 characters")
-    .max(60, "Label should be under 60 characters"),
-  bust: measurementNumber("Bust", 70, 130),
-  waist: measurementNumber("Waist", 50, 115),
-  hips: measurementNumber("Hips", 75, 140),
-  height: measurementNumber("Height", 150, 190),
-  heel: measurementNumber("Heel height", 0, 15),
-  notes: z
-    .string()
-    .max(400, "Notes should stay under 400 characters")
-    .optional()
-    .or(z.literal(""))
-    .transform((value) => (value === "" ? undefined : value)),
-});
+const PROFILE_VALIDATION_COPY: Record<
+  MeasurementLocale,
+  { labelMin: string; labelMax: string; notesMax: string }
+> = {
+  en: {
+    labelMin: "Label must have at least 2 characters",
+    labelMax: "Label should be under 60 characters",
+    notesMax: "Notes should stay under 400 characters",
+  },
+  sr: {
+    labelMin: "Naziv mora imati najmanje 2 karaktera",
+    labelMax: "Naziv treba da bude kraci od 60 karaktera",
+    notesMax: "Beleske treba da budu krace od 400 karaktera",
+  },
+};
+
+export const createMeasurementProfileSchema = (language: MeasurementLocale) => {
+  const labels = MEASUREMENT_VALIDATION_LABELS[language];
+  const messages = MEASUREMENT_MESSAGE_TEMPLATES[language];
+  const copy = PROFILE_VALIDATION_COPY[language];
+
+  return z.object({
+    label: z.string().min(2, copy.labelMin).max(60, copy.labelMax),
+    bust: measurementNumber(labels.bust, 70, 130, messages),
+    waist: measurementNumber(labels.waist, 50, 115, messages),
+    hips: measurementNumber(labels.hips, 75, 140, messages),
+    height: measurementNumber(labels.height, 150, 190, messages),
+    heel: measurementNumber(labels.preferredHeel, 0, 15, messages),
+    notes: z
+      .string()
+      .max(400, copy.notesMax)
+      .optional()
+      .or(z.literal(""))
+      .transform((value) => (value === "" ? undefined : value)),
+  });
+};
+
+export const measurementProfileSchema = createMeasurementProfileSchema("en");
 
 export type MeasurementProfileInput = z.input<typeof measurementProfileSchema>;
 export type MeasurementProfileValues = z.infer<typeof measurementProfileSchema>;

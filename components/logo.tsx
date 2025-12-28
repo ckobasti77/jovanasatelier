@@ -26,7 +26,7 @@ export function Logo({ className, subtitle }: LogoProps) {
         alt="JeVeux Couture logo"
         width={128}
         height={128}
-        className="h-12 w-12 md:h-20 md:w-20 shrink-0 object-contain"
+        className="h-12 w-12 md:h-20 md:w-20 shrink-0 object-contain [filter:drop-shadow(0_0_0.75px_rgba(0,0,0,0.9))] dark:[filter:drop-shadow(0_0_0.75px_rgba(255,255,255,0.95))]"
         priority
       />
       <div className="hidden md:flex flex-col">
@@ -35,7 +35,7 @@ export function Logo({ className, subtitle }: LogoProps) {
           alt="JeVeux"
           width={260}
           height={80}
-          className="h-10 w-auto object-contain md:h-12"
+          className="h-10 w-auto object-contain md:h-12 [filter:drop-shadow(0_0_0.75px_rgba(0,0,0,0.9))] dark:[filter:drop-shadow(0_0_0.75px_rgba(255,255,255,0.95))]"
           priority
         />
         <span

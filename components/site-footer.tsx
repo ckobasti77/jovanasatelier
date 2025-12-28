@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { Instagram, Mail, Phone } from "lucide-react";
 
 import { useLanguage } from "@/components/language-provider";
 import { Logo } from "./logo";
@@ -13,25 +14,37 @@ const FOOTER_COPY = {
       {
         title: "Studio",
         links: [
-          { label: "About Jovana", href: "#" },
-          { label: "Lookbook", href: "#" },
-          { label: "Press kit", href: "#" },
+          { label: "About JeVeux", href: "/o-jeveux" },
+          { label: "Lookbook", href: "/lookbook" },
+          { label: "Press kit", href: "/press-kit" },
         ],
       },
       {
         title: "Support",
         links: [
-          { label: "Fitting guide", href: "#fit" },
-          { label: "Aftercare", href: "#aftercare" },
+          { label: "Fitting guide", href: "/fitting-guide" },
+          { label: "Aftercare", href: "/aftercare" },
           { label: "FAQ", href: "/faq" },
         ],
       },
       {
         title: "Contact",
         links: [
-          { label: "WhatsApp", href: "https://wa.me/38100111222" },
-          { label: "Instagram", href: "https://instagram.com/jovanaatelier" },
-          { label: "Email", href: "mailto:studio@jovanaatelier.com" },
+          {
+            label: "Instagram",
+            href: "https://www.instagram.com/jeveuxcouture/",
+            icon: Instagram,
+          },
+          {
+            label: "Email",
+            href: "mailto:hello@jeveuxcouture.com",
+            icon: Mail,
+          },
+          {
+            label: "Phone",
+            href: "tel:+38164000000",
+            icon: Phone,
+          },
         ],
       },
     ],
@@ -44,25 +57,37 @@ const FOOTER_COPY = {
       {
         title: "Studio",
         links: [
-          { label: "O Jovani", href: "#" },
-          { label: "Lookbook", href: "#" },
-          { label: "Press kit", href: "#" },
+          { label: "O JeVeux", href: "/o-jeveux" },
+          { label: "Lookbook", href: "/lookbook" },
+          { label: "Press kit", href: "/press-kit" },
         ],
       },
       {
         title: "Podrška",
         links: [
-          { label: "Vodič za mere", href: "#fit" },
-          { label: "Aftercare", href: "#aftercare" },
+          { label: "Vodič za mere", href: "/fitting-guide" },
+          { label: "Aftercare", href: "/aftercare" },
           { label: "FAQ", href: "/faq" },
         ],
       },
       {
         title: "Kontakt",
         links: [
-          { label: "WhatsApp", href: "https://wa.me/38100111222" },
-          { label: "Instagram", href: "https://instagram.com/jovanaatelier" },
-          { label: "Email", href: "mailto:studio@jovanaatelier.com" },
+          {
+            label: "Instagram",
+            href: "https://www.instagram.com/jeveuxcouture/",
+            icon: Instagram,
+          },
+          {
+            label: "Email",
+            href: "mailto:hello@jeveuxcouture.com",
+            icon: Mail,
+          },
+          {
+            label: "Telefon",
+            href: "tel:+38164000000",
+            icon: Phone,
+          },
         ],
       },
     ],
@@ -89,16 +114,22 @@ export function SiteFooter() {
               {section.title}
             </h3>
             <ul className="space-y-2 text-sm text-foreground/60">
-              {section.links.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="transition hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {section.links.map((link) => {
+                const Icon = "icon" in link ? link.icon : null;
+                return (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="flex items-center gap-2 transition hover:text-foreground"
+                    >
+                      {Icon ? (
+                        <Icon className="h-4 w-4 text-foreground/50" />
+                      ) : null}
+                      <span>{link.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

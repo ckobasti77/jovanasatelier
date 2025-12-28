@@ -19,7 +19,7 @@ type ThemeContextValue = {
   setTheme: (theme: Theme) => void;
 };
 
-const STORAGE_KEY = "jovana-theme";
+const STORAGE_KEY = "jeveux-theme";
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 

@@ -128,7 +128,7 @@ export const create = mutation({
   },
   handler: async (ctx: MutationCtx, args: CreateArgs) => {
     const viewer = await getViewer(ctx, args.sessionToken);
-    if (!viewer) throw new Error("Unauthorized");
+    if (!viewer) throw new Error("AUTH_UNAUTHORIZED");
 
     const timestamp = now();
     const productionTimeline = args.productionTimeline.map((step) => ({
@@ -217,12 +217,12 @@ export const updateStatus = mutation({
   },
   handler: async (ctx: MutationCtx, args: UpdateStatusArgs) => {
     const viewer = await getViewer(ctx, args.sessionToken);
-    if (!viewer) throw new Error("Unauthorized");
+    if (!viewer) throw new Error("AUTH_UNAUTHORIZED");
 
     const order = await ctx.db.get(args.orderId);
-    if (!order) throw new Error("Order not found");
+    if (!order) throw new Error("ORDER_NOT_FOUND");
     if (viewer.user.role !== "admin" && order.userId !== viewer.user.id) {
-      throw new Error("Not permitted to update this order");
+      throw new Error("ORDER_UPDATE_FORBIDDEN");
     }
 
     const productionTimeline = args.productionTimeline

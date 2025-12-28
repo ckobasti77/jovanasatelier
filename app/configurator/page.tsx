@@ -29,14 +29,14 @@ import {
   getFieldsForStep,
 } from "@/lib/configurator-schema";
 import { useConvexMutation, useConvexQuery } from "@/lib/convex-client";
-import { getErrorMessage } from "@/lib/error";
+import { getErrorMessage, UserFacingError } from "@/lib/error";
 import { useSessionToken } from "@/hooks/use-session-token";
 
 const ORDER_STATUS = "pending";
 const ORDER_STAGE = "configuration_submitted";
-const CONFIGURATOR_DRAFT_KEY = "jovana-configurator-draft";
+const CONFIGURATOR_DRAFT_KEY = "jeveux-configurator-draft";
 const CONFIGURATOR_DRAFT_VERSION = 1;
-const CONFIGURATOR_RETURN_KEY = "jovana-configurator-return";
+const CONFIGURATOR_RETURN_KEY = "jeveux-configurator-return";
 
 type ConfiguratorDraft = {
   version: number;
@@ -111,7 +111,7 @@ const CONFIG_COPY = {
     badge: "wizard",
     title: "Design your dress",
     description:
-      "Follow the guided steps to choose a silhouette and add custom measurements. Save your progress anytime and share the finished configuration with your atelier concierge.",
+      "Follow the guided steps to choose a silhouette and add custom measurements. Save your progress anytime and review the final configuration with your atelier concierge.",
     secureTag: "secure atelier portal",
     previous: "Previous",
     next: "Next step",
@@ -134,7 +134,7 @@ const CONFIG_COPY = {
     badge: "čarobnjak",
     title: "Kreiraj svoju haljinu",
     description:
-      "Prodji kroz vodjene korake, izaberi siluetu i unesi mere. Sacuvaj napredak i podeli finalnu konfiguraciju sa atelje timom.",
+      "Prodji kroz vodjene korake, izaberi siluetu i unesi mere. Sacuvaj napredak i dovrsi konfiguraciju sa atelje timom.",
     secureTag: "sigurni atelje portal",
     previous: "Prethodno",
     next: "Sledeći korak",
@@ -449,7 +449,7 @@ function ConfiguratorPageContent() {
           typeof heel === "number";
 
         if (!hasAllCore) {
-          throw new Error(copy.errors.profileMissing);
+          throw new UserFacingError(copy.errors.profileMissing);
         }
 
         const formattedDate = new Intl.DateTimeFormat(
@@ -470,7 +470,9 @@ function ConfiguratorPageContent() {
             notes: undefined,
           });
         } catch (profileError) {
-          throw new Error(getErrorMessage(profileError, copy.errors.profileFailed));
+          throw new Error(
+            getErrorMessage(profileError, copy.errors.profileFailed, language),
+          );
         }
       }
 
@@ -539,7 +541,7 @@ function ConfiguratorPageContent() {
       setSuccessCode(orderCode);
       clearConfiguratorDraft();
     } catch (error) {
-      setSubmissionError(getErrorMessage(error, copy.errors.generic));
+      setSubmissionError(getErrorMessage(error, copy.errors.generic, language));
     } finally {
       setIsSubmitting(false);
     }

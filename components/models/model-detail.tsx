@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
@@ -38,7 +39,7 @@ const MODEL_PAGE_COPY = {
     nextImage: "Next image",
   },
   sr: {
-    badge: "profil siluete",
+    badge: "profil modela",
     backLabel: "Nazad na modele",
     configureLabel: "Konfigurisi model",
     pricePrefix: "od EUR",
@@ -77,10 +78,17 @@ export function ModelDetail({ modelId }: { modelId: string }) {
   const silhouetteLabel =
     SILHOUETTE_LABELS[language][model.silhouette] ?? model.silhouette;
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const requestedColorId = searchParams.get("color");
 
   useEffect(() => {
-    setSelectedColorId(null);
-  }, [model.id]);
+    if (!requestedColorId) {
+      setSelectedColorId(null);
+      return;
+    }
+    const isValid = model.colors.some((color) => color.id === requestedColorId);
+    setSelectedColorId(isValid ? requestedColorId : null);
+  }, [model.colors, model.id, requestedColorId]);
 
   const selectedColor = useMemo(
     () => model.colors.find((color) => color.id === selectedColorId) ?? null,

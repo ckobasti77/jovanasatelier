@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ const FORM_COPY = {
     title: "Create measurement profile",
     description: "Save a profile to reuse measurements and speed up future orders.",
     label: "Profile label",
-    labelHelper: "Example: Barefoot ceremony or Jovana - 8cm heels.",
+    labelHelper: "Example: Barefoot ceremony or 8cm heels.",
     bust: "Bust (cm)",
     waist: "Waist (cm)",
     hips: "Hips (cm)",
@@ -37,20 +37,21 @@ const FORM_COPY = {
   sr: {
     badge: "atelje profili",
     title: "Kreiraj profil mera",
-    description: "Sa�?uvaj profil da bi ubrzala budu�?e porud�_bine i provere.",
+    description: "Sacuvaj profil da bi ubrzala buduce porudzbine i provere.",
     label: "Naziv profila",
-    labelHelper: "Primer: Bosa ceremonija ili Jovana - 8cm ��tikle.",
+    labelHelper: "Primer: Bosa ceremonija ili 8cm stikle.",
     bust: "Grudi (cm)",
     waist: "Struk (cm)",
     hips: "Kukovi (cm)",
     height: "Visina (cm)",
-    heel: "Visina ��tikle (cm)",
-    notes: "Bele�_ke",
-    notesHelper: "Opcionalno: omiljeni grudnjak, �?eljena lako�a ili styling napomene.",
-    save: "Sa�?uvaj profil",
-    saving: "�?uvamo...",
+    heel: "Visina stikle (cm)",
+    notes: "Beleske",
+    notesHelper:
+      "Opcionalno: omiljeni grudnjak, zeljena lakoca ili styling napomene.",
+    save: "Sacuvaj profil",
+    saving: "Cuvamo...",
     back: "Nazad na profile",
-    error: "Profil nije sa�?uvan. Poku��aj ponovo.",
+    error: "Profil nije sacuvan. Pokusaj ponovo.",
   },
 } as const;
 
@@ -127,7 +128,7 @@ export default function NewProfilePage() {
                 });
                 router.push("/profiles");
               } catch (error) {
-                setFeedback(getErrorMessage(error, copy.error));
+                setFeedback(getErrorMessage(error, copy.error, language));
               } finally {
                 setIsSubmitting(false);
               }
@@ -138,3 +139,4 @@ export default function NewProfilePage() {
     </div>
   );
 }
+

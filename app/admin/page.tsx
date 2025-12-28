@@ -659,6 +659,7 @@ function ConciergeCard({
           language === "sr"
             ? "Promena statusa nije uspela."
             : "Unable to update status.",
+          language,
         ),
       );
     } finally {
@@ -930,7 +931,13 @@ function AdminOrderCard({
       setFeedback(language === "sr" ? "Sačuvano." : "Changes saved.");
       setTimeout(() => setFeedback(null), 3000);
     } catch (error) {
-      setFeedback(getErrorMessage(error, language === "sr" ? "Greška pri čuvanju." : "Unable to save changes."));
+      setFeedback(
+        getErrorMessage(
+          error,
+          language === "sr" ? "Greška pri čuvanju." : "Unable to save changes.",
+          language,
+        ),
+      );
     } finally {
       setSavingProduction(false);
     }
@@ -959,7 +966,11 @@ function AdminOrderCard({
       setTimeout(() => setFeedback(null), 3000);
     } catch (error) {
       setFeedback(
-        getErrorMessage(error, language === "sr" ? "Greška pri slanju beleške." : "Unable to send update."),
+        getErrorMessage(
+          error,
+          language === "sr" ? "Greška pri slanju beleške." : "Unable to send update.",
+          language,
+        ),
       );
     } finally {
       setSendingShare(false);

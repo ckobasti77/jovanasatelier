@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -21,7 +21,7 @@ const FORM_COPY = {
     title: "Edit measurement profile",
     description: "Update the profile and we will sync changes with your configurator presets.",
     label: "Profile label",
-    labelHelper: "Example: Barefoot ceremony or Jovana - 8cm heels.",
+    labelHelper: "Example: Barefoot ceremony or 8cm heels.",
     bust: "Bust (cm)",
     waist: "Waist (cm)",
     hips: "Hips (cm)",
@@ -40,23 +40,24 @@ const FORM_COPY = {
   sr: {
     badge: "atelje profili",
     title: "Uredi profil mera",
-    description: "A�_uriraj profil i sinhronizova�?emo promene sa konfiguratorom.",
+    description: "Azuriraj profil i sinhronizovacemo promene sa konfiguratorom.",
     label: "Naziv profila",
-    labelHelper: "Primer: Bosa ceremonija ili Jovana - 8cm ��tikle.",
+    labelHelper: "Primer: Bosa ceremonija ili 8cm stikle.",
     bust: "Grudi (cm)",
     waist: "Struk (cm)",
     hips: "Kukovi (cm)",
     height: "Visina (cm)",
-    heel: "Visina ��tikle (cm)",
-    notes: "Bele�_ke",
-    notesHelper: "Opcionalno: omiljeni grudnjak, �?eljena lako�a ili styling napomene.",
-    save: "Sa�?uvaj izmene",
-    saving: "�?uvamo...",
-    delete: "Obri��i profil",
-    deleting: "Bri��emo...",
+    heel: "Visina stikle (cm)",
+    notes: "Beleske",
+    notesHelper:
+      "Opcionalno: omiljeni grudnjak, zeljena lakoca ili styling napomene.",
+    save: "Sacuvaj izmene",
+    saving: "Cuvamo...",
+    delete: "Obrisi profil",
+    deleting: "Brisemo...",
     back: "Nazad na profile",
-    error: "Profil nije sa�?uvan. Poku��aj ponovo.",
-    deleteError: "Profil nije obrisan. Poku��aj ponovo.",
+    error: "Profil nije sacuvan. Pokusaj ponovo.",
+    deleteError: "Profil nije obrisan. Pokusaj ponovo.",
   },
 } as const;
 
@@ -218,7 +219,7 @@ export default function EditProfilePage() {
                 });
                 router.push("/profiles");
               } catch (error) {
-                setFeedback(getErrorMessage(error, copy.error));
+                setFeedback(getErrorMessage(error, copy.error, language));
               } finally {
                 setIsSubmitting(false);
               }
@@ -233,7 +234,7 @@ export default function EditProfilePage() {
                 });
                 router.push("/profiles");
               } catch (error) {
-                setFeedback(getErrorMessage(error, copy.deleteError));
+                setFeedback(getErrorMessage(error, copy.deleteError, language));
               } finally {
                 setIsDeleting(false);
               }
@@ -259,3 +260,4 @@ export default function EditProfilePage() {
     </div>
   );
 }
+

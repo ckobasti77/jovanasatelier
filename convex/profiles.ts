@@ -88,7 +88,7 @@ export const upsert = mutation({
     const { sessionToken, profileId, ...profileData } = args;
     const viewer = await getViewer(ctx, sessionToken);
     if (!viewer) {
-      throw new Error("Unauthorized");
+      throw new Error("AUTH_UNAUTHORIZED");
     }
 
     const timestamp = now();
@@ -96,7 +96,7 @@ export const upsert = mutation({
     if (profileId) {
       const existing = await ctx.db.get(profileId);
       if (!existing || existing.userId !== viewer.user.id) {
-        throw new Error("Profile not found");
+        throw new Error("PROFILE_NOT_FOUND");
       }
       await ctx.db.patch(profileId, {
         ...profileData,
@@ -126,11 +126,11 @@ export const remove = mutation({
   },
   handler: async (ctx: MutationCtx, args: RemoveArgs) => {
     const viewer = await getViewer(ctx, args.sessionToken);
-    if (!viewer) throw new Error("Unauthorized");
+    if (!viewer) throw new Error("AUTH_UNAUTHORIZED");
 
     const profile = await ctx.db.get(args.profileId);
     if (!profile || profile.userId !== viewer.user.id) {
-      throw new Error("Profile not found");
+      throw new Error("PROFILE_NOT_FOUND");
     }
 
     await ctx.db.delete(args.profileId);

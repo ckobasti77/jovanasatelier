@@ -21,7 +21,7 @@ export const submit = mutation({
   },
   handler: async (ctx: MutationCtx, args: SubmitArgs) => {
     const viewer = await getViewer(ctx, args.sessionToken);
-    if (!viewer) throw new Error("Unauthorized");
+    if (!viewer) throw new Error("AUTH_UNAUTHORIZED");
 
     await ctx.db.insert("conciergeRequests", {
       userId: viewer.user.id,
@@ -51,7 +51,7 @@ export const updateStatus = mutation({
   handler: async (ctx: MutationCtx, args: UpdateStatusArgs) => {
     const viewer = await getViewer(ctx, args.sessionToken);
     if (!viewer || viewer.user.role !== "admin") {
-      throw new Error("Admin only");
+      throw new Error("PERMISSION_ADMIN_ONLY");
     }
 
     await ctx.db.patch(args.requestId, {

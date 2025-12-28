@@ -17,7 +17,7 @@ type LanguageContextValue = {
   toggleLanguage: () => void;
 };
 
-const STORAGE_KEY = "jovana-language";
+const STORAGE_KEY = "jeveux-language";
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 

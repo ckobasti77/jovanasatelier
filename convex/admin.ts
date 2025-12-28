@@ -11,7 +11,7 @@ type AdminCtx = QueryCtx | MutationCtx;
 async function requireAdmin(ctx: AdminCtx, sessionToken?: string) {
   const viewer = await getViewer(ctx, sessionToken);
   if (!viewer || viewer.user.role !== "admin") {
-    throw new Error("Admin only");
+    throw new Error("PERMISSION_ADMIN_ONLY");
   }
   return viewer;
 }
@@ -137,7 +137,7 @@ export const ensureShareKey = mutation({
   handler: async (ctx: MutationCtx, args: { sessionToken?: string; orderId: Id<"orders"> }) => {
     await requireAdmin(ctx, args.sessionToken);
     const order = await ctx.db.get(args.orderId);
-    if (!order) throw new Error("Order not found");
+    if (!order) throw new Error("ORDER_NOT_FOUND");
     if (order.shareKey) return order.shareKey;
 
     const shareKey = uuid();
@@ -168,7 +168,7 @@ export const recordProgressUpdate = mutation({
   ) => {
     await requireAdmin(ctx, args.sessionToken);
     const order = await ctx.db.get(args.orderId);
-    if (!order) throw new Error("Order not found");
+    if (!order) throw new Error("ORDER_NOT_FOUND");
 
     const timestamp = now();
     const progressUpdates = [
@@ -226,7 +226,7 @@ export const updateProduction = mutation({
   ) => {
     await requireAdmin(ctx, args.sessionToken);
     const order = await ctx.db.get(args.orderId);
-    if (!order) throw new Error("Order not found");
+    if (!order) throw new Error("ORDER_NOT_FOUND");
 
     const timestamp = now();
     await ctx.db.patch(order._id, {

@@ -601,7 +601,8 @@ export default function PortalPage() {
     return Math.round((completed / steps.length) * 100);
   }, [orders]);
 
-  const userName = dashboard?.user?.name ?? "Jovana";
+  const fallbackName = language === "sr" ? "Gost" : "Guest";
+  const userName = dashboard?.user?.name ?? fallbackName;
 
   async function handleSignOut() {
     try {
@@ -642,7 +643,9 @@ export default function PortalPage() {
       setConciergeFeedback(copy.concierge.successMessage);
       setConciergeFeedbackType("success");
     } catch (error) {
-      setConciergeFeedback(getErrorMessage(error, copy.concierge.errorFallback));
+      setConciergeFeedback(
+        getErrorMessage(error, copy.concierge.errorFallback, language),
+      );
       setConciergeFeedbackType("error");
     } finally {
       setConciergeSubmitting(false);

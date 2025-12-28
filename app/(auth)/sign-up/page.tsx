@@ -24,7 +24,7 @@ const COPY = {
       "A single place to manage measurements, track bespoke orders, and reach your stylist team.",
     highlights: [
       "Craft multiple measurement profiles for different occasions",
-      "Save configuration drafts and share with friends",
+      "Review saved configurations in one place",
       "Unlock concierge styling sessions & alteration tokens",
     ],
     already: "Already part of the atelier?",
@@ -32,9 +32,9 @@ const COPY = {
     orderNotice:
       "Create an account to place your order. We saved your configuration and will return you to the final step.",
     nameLabel: "Full name",
-    namePlaceholder: "Jovana Novak",
+    namePlaceholder: "Ana Novak",
     emailLabel: "Email address",
-    emailPlaceholder: "jovana@example.com",
+    emailPlaceholder: "hello@example.com",
     phoneLabel: "Phone / WhatsApp",
     phoneHelper: "Optional. Concierge will use this for fittings.",
     phonePlaceholder: "+381 XX XXX",
@@ -56,7 +56,7 @@ const COPY = {
       "Jedno mesto za upravljanje merama, pracenje bespoke porudzbina i kontakt sa stilistima.",
     highlights: [
       "Napravi vise profila mera za razlicite prilike",
-      "Sacuvaj nacrte konfiguracija i podeli sa prijateljima",
+      "Sacuvaj nacrte konfiguracija i pregledaj ih kasnije",
       "Otkljucaj concierge sesije i tokene za korekcije",
     ],
     already: "Vec si deo ateljea?",
@@ -64,9 +64,9 @@ const COPY = {
     orderNotice:
       "Napravi nalog da biste porucili. Sacuvali smo konfiguraciju i vraticemo vas na poslednji korak.",
     nameLabel: "Ime i prezime",
-    namePlaceholder: "Jovana Novak",
+    namePlaceholder: "Ana Novak",
     emailLabel: "Email adresa",
-    emailPlaceholder: "jovana@example.com",
+    emailPlaceholder: "hello@example.com",
     phoneLabel: "Telefon / WhatsApp",
     phoneHelper: "Opcionalno. Concierge tim koristi ovo za probe.",
     phonePlaceholder: "+381 XX XXX",
@@ -190,7 +190,7 @@ function SignUpPageContent() {
       saveSessionToken(result.sessionToken);
       window.location.href = returnTo ?? "/portal";
     } catch (error) {
-      setError(getErrorMessage(error, copy.errorFallback));
+      setError(getErrorMessage(error, copy.errorFallback, language));
       setIsSubmitting(false);
     }
   }
@@ -338,3 +338,4 @@ export default function SignUpPage() {
     </Suspense>
   );
 }
+

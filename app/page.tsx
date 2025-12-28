@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -11,7 +12,6 @@ import {
   MoveRight,
   Palette,
   Ruler,
-  Share2,
   Sparkles,
 } from "lucide-react";
 
@@ -37,7 +37,7 @@ const HERO_HIGHLIGHTS = [
         description: "Four couture-approved bases fine-tuned for modern bodies.",
       },
       sr: {
-        title: "Potpisane siluete",
+        title: "Potpisani modeli",
         description: "Četiri couture osnove prilagođene savremenoj figuri.",
       },
     },
@@ -188,7 +188,7 @@ const HOME_COPY = {
         "Allure, Blush, Elegance, and Valeria - signature models engineered to adapt to your shape. Configure fabrics, colors, and every centimeter of fit in a guided atelier experience built for zero guesswork.",
       primaryCta: "Launch configurator",
       secondaryCta: "Explore silhouettes",
-      overlayTag: "Jovana muse",
+      overlayTag: "JeVeux muse",
       overlayLabel: "featured look",
       overlayDescription: "Silk crepe column with draped shoulders and detachable sash.",
       overlayChips: ["Elegance edit", "Pearl", "Atelier 12h"],
@@ -211,11 +211,6 @@ const HOME_COPY = {
       badge: "process",
       heading: "A guided journey from spark to finished garment.",
       footerLabel: "guided & interactive",
-      shareTitle: "Save and share your configuration.",
-      shareDescription:
-        "The configurator generates a secure link you can send to friends or stylists. Export a PDF order summary with your measurements, fabrics, and atelier notes.",
-      shareMeta: "URL short-link + QR code",
-      shareMetaCaption: "privacy-first",
     },
     fit: {
       badge: "fit assistant",
@@ -223,11 +218,11 @@ const HOME_COPY = {
       bullets: [
         "Step-by-step measurement wizard with visual prompts, tolerance thresholds, and live validation.",
         "Fit confidence bar factors in height, bust-weight ratio, and chosen model silhouette for better recommendations.",
-        "Save multiple measurement profiles ? ?Jovana in heels?, ?Jovana barefoot? ? and switch with one tap.",
+        "Save multiple measurement profiles - \"Heels\", \"Barefoot\" - and switch with one tap.",
       ],
       primaryCta: "Start measuring",
-      secondaryCta: "Watch the guide video",
-      profileLabel: "profile: Jovana heels",
+      secondaryCta: "Measurement guide",
+      profileLabel: "profile: ceremony heels",
       confidenceLabel: "confidence: high",
       metricLabels: ["Bust", "Waist", "Hips", "Heel height"],
       metricValues: ["92 cm", "70 cm", "98 cm", "8 cm"],
@@ -239,7 +234,8 @@ const HOME_COPY = {
       badge: "aftercare",
       heading: "Support beyond the atelier doors.",
       description:
-        "Each order unlocks resources to keep your piece immaculate. From bespoke care routines to video tutorials and alteration credits, we stay with you long after the celebration.",
+        "Each order unlocks resources to keep your piece immaculate. From bespoke care routines to atelier check-ins and alteration credits, we stay with you long after the celebration.",
+      guideCta: "Full aftercare guide",
       closingTitle: "Ready to step inside the atelier?",
       closingDescription:
         "Create an account to save measurement profiles, track production, and unlock early previews of new silhouettes.",
@@ -251,19 +247,19 @@ const HOME_COPY = {
     hero: {
       badge: "po meri",
       subline: "Ručno rađeno u Beogradu — isporuka širom sveta",
-      title: "Tvoje telo. Tvoje mere. Četiri siluete za haljinu iz snova.",
+      title: "Tvoje telo. Tvoje mere. Četiri modela za haljinu iz snova.",
       description:
         "Allure, Blush, Elegance i Valeria — potpisani modeli projektovani da se prilagode tvojoj figuri. Konfiguriši tkanine, boje i svaki centimetar kroja uz vođeno atelje iskustvo bez nagađanja.",
       primaryCta: "Pokreni konfigurator",
-      secondaryCta: "Istraži siluete",
-      overlayTag: "Jovanina muza",
+      secondaryCta: "Istraži modele",
+      overlayTag: "Muza JeVeux",
       overlayLabel: "izdvojeni look",
       overlayDescription: "Svileni krep u kolonskom kroju sa drapiranim ramenima i odvojivim pojasom.",
       overlayChips: ["Elegance edicija", "Biser", "Atelje 12h"],
       imageAlt: "Model u ručno šivanoj večernjoj haljini",
     },
     models: {
-      badge: "siluete",
+      badge: "modeli",
       heading: "Četiri potpisa, beskrajne varijacije.",
       cta: "Pogledaj lookbook",
       pricePrefix: "od EUR",
@@ -277,42 +273,38 @@ const HOME_COPY = {
     },
     process: {
       badge: "proces",
-      heading: "Vođeno putovanje od iskre do završene haljine.",
-      footerLabel: "vođeno & interaktivno",
-      shareTitle: "Sačuvaj i podeli konfiguraciju.",
-      shareDescription:
-        "Konfigurator generiše bezbedan link koji možeš poslati prijateljima ili stilistima. Izvezi PDF sa merama, tkaninama i beleškama ateljea.",
-      shareMeta: "URL skraćeni link + QR kod",
-      shareMetaCaption: "privatnost pre svega",
+      heading: "Vodeno putovanje od iskre do zavrsene haljine.",
+      footerLabel: "vodeno & interaktivno",
     },
     fit: {
       badge: "fit asistent",
-      heading: "Inteligentno vođenje za lako uzimanje mera.",
+      heading: "Inteligentno vodenje za lako uzimanje mera.",
       bullets: [
-        "Korak-po-korak čarobnjak za mere sa vizuelnim instrukcijama, tolerancijama i trenutnom validacijom.",
-        "Traka pouzdanosti uklapanja uzima u obzir visinu, odnos grudi i težine i odabranu siluetu modela za preciznije preporuke.",
-        "Sačuvaj više profila mera – „Jovana u štiklama“, „Jovana bosa“ – i menjaj ih jednim dodirom.",
+        "Korak-po-korak carobnjak za mere sa vizuelnim instrukcijama, tolerancijama i trenutnom validacijom.",
+        "Traka pouzdanosti uklapanja uzima u obzir visinu, odnos grudi i tezine i odabranu siluetu modela za preciznije preporuke.",
+        "Sacuvaj vise profila mera - \"U stiklama\", \"Bosa\" - i menjaj ih jednim dodirom.",
       ],
-      primaryCta: "Počni sa merenjem",
-      secondaryCta: "Pogledaj video vodič",
-      profileLabel: "profil: Jovana u štiklama",
+      primaryCta: "Pocni sa merenjem",
+      secondaryCta: "Vodic za mere",
+      profileLabel: "profil: u stiklama",
       confidenceLabel: "sigurnost: visoka",
-      metricLabels: ["Grudi", "Struk", "Kukovi", "Visina štikle"],
+      metricLabels: ["Grudi", "Struk", "Kukovi", "Visina stikle"],
       metricValues: ["92 cm", "70 cm", "98 cm", "8 cm"],
       fitScoreLabel: "sigurnost uklapanja",
       fitSummary:
-        "Zasnovano na tvojoj Elegance konfiguraciji sa tencel satenom. Podesi obim grudi ili visinu štikle za još bolji pad.",
+        "Zasnovano na tvojoj Elegance konfiguraciji sa tencel satenom. Podesi obim grudi ili visinu stikle za jos bolji pad.",
     },
     aftercare: {
       badge: "nega",
       heading: "Podrška i kada izađeš iz ateljea.",
       description:
-        "Svaka porudžbina otključava resurse da haljina ostane besprekorna. Od personalizovanih rituala nege do video tutorijala i kredita za prepravke, ostajemo uz tebe i posle proslave.",
+        "Svaka porudžbina otključava resurse da haljina ostane besprekorna. Od personalizovanih rituala nege do atelier saveta i kredita za prepravke, ostajemo uz tebe i posle proslave.",
       closingTitle: "Spremna da zakoračiš u atelje?",
       closingDescription:
         "Kreiraj nalog, sačuvaj profile mera, prati izradu i otključaj rani pristup novim siluetama.",
       primaryCta: "Otvori svoj profil",
       secondaryCta: "Prijavi se",
+      guideCta: "Kompletan vodic za negu",
     },
   },
 } as const;
@@ -415,7 +407,7 @@ function HeroSection() {
       </div>
       <motion.div
         className="mt-4 grid gap-5 sm:mt-6 sm:grid-cols-2 lg:col-span-2 lg:mt-8 lg:grid-cols-3"
-        initial="hidden"
+        initial={false}
         animate="visible"
         variants={{
           hidden: { opacity: 0, y: 24 },
@@ -465,6 +457,10 @@ function ModelsSection() {
   const { language } = useLanguage();
   const copy = HOME_COPY[language].models;
   const models = useLocalizedDressModels();
+  const router = useRouter();
+  const handleCardNavigate = (slug: string) => {
+    router.push(`/models/${slug}`);
+  };
   return (
     <section id="models" className="space-y-10">
       <div className="flex flex-col gap-3">
@@ -490,7 +486,22 @@ function ModelsSection() {
       </div>
       <div className="grid gap-8 md:grid-cols-2">
         {models.map((model) => (
-          <Card key={model.id} glow className="group overflow-hidden">
+          <Card
+            key={model.id}
+            glow
+            role="link"
+            tabIndex={0}
+            aria-label={`${model.name} details`}
+            className="group cursor-pointer overflow-hidden"
+            onClick={() => handleCardNavigate(model.slug)}
+            onKeyDown={(event) => {
+              if (event.target !== event.currentTarget) return;
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleCardNavigate(model.slug);
+              }
+            }}
+          >
             <CardHeader className="relative flex flex-col gap-4 pb-0">
               <div className="relative overflow-hidden rounded-[24px] border border-border/30">
                 <Image
@@ -558,7 +569,10 @@ function ModelsSection() {
                 size="sm"
                 className="backdrop-blur hover:translate-x-0.5"
               >
-                <Link href={`/configurator?model=${model.slug}`}>
+                <Link
+                  href={`/configurator?model=${model.slug}`}
+                  onClick={(event) => event.stopPropagation()}
+                >
                   {copy.configureLabel} {model.name}
                 </Link>
               </Button>
@@ -631,28 +645,6 @@ function ConfiguratorProcess() {
           );
         })}
       </div>
-      <div className="flex flex-col gap-6 rounded-[24px] border border-border/40 bg-background/80 p-6 sm:p-7 md:flex-row md:items-center md:justify-between md:gap-8">
-        <div className="space-y-3">
-          <h3 className="text-2xl font-semibold text-foreground">
-            {copy.shareTitle}
-          </h3>
-          <p className="max-w-xl text-sm text-foreground/70">
-            {copy.shareDescription}
-          </p>
-        </div>
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-background/95">
-            <Share2 className="h-5 w-5 text-foreground/70" />
-          </div>
-          <div className="text-sm text-foreground/65">
-            {copy.shareMeta}
-            <br />
-            <span className="text-xs uppercase tracking-[0.28em]">
-              {copy.shareMetaCaption}
-            </span>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
@@ -697,7 +689,7 @@ function FitAssistantHighlight() {
             variant="ghost"
             className="w-full border border-foreground/15 sm:w-auto"
           >
-            <Link href="/guides/measurement">{copy.secondaryCta}</Link>
+            <Link href="/fitting-guide">{copy.secondaryCta}</Link>
           </Button>
         </div>
       </div>
@@ -767,6 +759,14 @@ function AftercareSection() {
         <p className="max-w-3xl text-sm text-foreground/70">
           {copy.description}
         </p>
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="w-full border border-foreground/15 sm:w-fit"
+        >
+          <Link href="/aftercare">{copy.guideCta}</Link>
+        </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-3">
         {AFTERCARE_CARDS.map((item) => {
@@ -814,3 +814,13 @@ function AftercareSection() {
     </section>
   );
 }
+
+
+
+
+
+
+
+
+
+

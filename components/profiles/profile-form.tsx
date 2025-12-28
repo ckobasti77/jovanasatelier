@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, useForm, type UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  measurementProfileSchema,
+  createMeasurementProfileSchema,
   type MeasurementProfileInput,
   type MeasurementProfileValues,
 } from "@/lib/measurements";
@@ -53,8 +54,14 @@ export function ProfileForm({
   deleting,
   copy,
 }: ProfileFormProps) {
+  const { language } = useLanguage();
+  const schema = useMemo(
+    () => createMeasurementProfileSchema(language),
+    [language],
+  );
+
   const form = useForm<MeasurementProfileInput, unknown, MeasurementProfileValues>({
-    resolver: zodResolver(measurementProfileSchema),
+    resolver: zodResolver(schema),
     mode: "onBlur",
     defaultValues: {
       label: "",

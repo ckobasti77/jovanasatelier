@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import { ConvexClientProvider } from "@/providers/convex-provider";
 import "./globals.css";
 
@@ -24,7 +25,7 @@ const description =
   "Discover four signature silhouettes and tailor every measurement to your body. Configure fabric, color, and fit with JeVeux Couture's design-to-fit experience.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jovana-atelier.example"),
+  metadataBase: new URL("https://jeveux-couture.example"),
   title: {
     default: title,
     template: "%s | JeVeux Couture",
@@ -36,11 +37,11 @@ export const metadata: Metadata = {
   openGraph: {
     title,
     description,
-    url: "https://jovana-atelier.example",
+    url: "https://jeveux-couture.example",
     siteName: "JeVeux Couture",
     images: [
       {
-        url: "https://jovana-atelier.example/og.png",
+        url: "https://jeveux-couture.example/og.png",
         width: 1200,
         height: 630,
         alt: "JeVeux Couture dress configurator preview",
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    creator: "@jovanaatelier",
+    creator: "@jeveuxcouture",
   },
 };
 
@@ -63,7 +64,7 @@ export default function RootLayout({
 }>) {
   const themeInitializer = `
   (() => {
-    const storageKey = "jovana-theme";
+    const storageKey = "jeveux-theme";
     const cleanup = () => {
       if (document.body && document.body.hasAttribute("cz-shortcut-listen")) {
         document.body.removeAttribute("cz-shortcut-listen");
@@ -107,6 +108,7 @@ export default function RootLayout({
                 style={{ backgroundImage: "var(--shell-background)" }}
               >
                 {children}
+                <ScrollToTop />
               </div>
             </ThemeProvider>
           </LanguageProvider>

@@ -31,7 +31,7 @@ export const signUp = mutation({
       .unique();
 
     if (existingUser) {
-      throw new Error("Email already registered.");
+      throw new Error("AUTH_EMAIL_ALREADY_REGISTERED");
     }
 
     const timestamp = now();
@@ -56,7 +56,7 @@ export const signUp = mutation({
     });
 
     const user = await ctx.db.get(userId);
-    if (!user) throw new Error("Failed to load user after sign up.");
+    if (!user) throw new Error("AUTH_SIGNUP_FAILED");
 
     return {
       sessionToken,
@@ -81,11 +81,11 @@ export const signIn = mutation({
       .unique();
 
     if (!user) {
-      throw new Error("Invalid credentials.");
+      throw new Error("AUTH_USER_NOT_FOUND");
     }
     const valid = verifyPassword(args.password, user.passwordHash);
     if (!valid) {
-      throw new Error("Invalid credentials.");
+      throw new Error("AUTH_INVALID_PASSWORD");
     }
 
     if (ADMIN_EMAILS.has(normalizedEmail) && user.role !== "admin") {
