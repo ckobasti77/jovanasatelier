@@ -186,48 +186,50 @@ export function SiteHeader() {
                 <X className="h-5 w-5" />
               </Button>
             </div>
-            <nav className="flex flex-col gap-3 rounded-3xl border border-border/40 bg-background/95 p-3 shadow-lg backdrop-blur">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={mobileNavLinkClass}
-                  onClick={closeMobileMenu}
+            <div className="flex flex-1 flex-col gap-6 rounded-[28px] border border-border/40 bg-background/90 p-4 shadow-[0_35px_70px_-50px_rgba(0,0,0,0.6)] backdrop-blur-[28px]">
+              <nav className="flex flex-col gap-3 rounded-3xl border border-border/30 bg-background/35 p-3">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={mobileNavLinkClass}
+                    onClick={closeMobileMenu}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+              <div className="mt-auto flex flex-col gap-4">
+                <Button
+                  asChild
+                  size="md"
+                  className="w-full justify-center px-6 text-base tracking-[0.08em]"
                 >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="mt-auto flex flex-col gap-4">
-              <Button
-                asChild
-                size="md"
-                className="w-full justify-center px-6 text-base tracking-[0.08em]"
-              >
-                <Link href="/configurator" onClick={closeMobileMenu}>
-                  {ctas.design}
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="md"
-                className="w-full justify-center border border-border/50 bg-background/80 px-6 text-base"
-              >
-                <Link
-                  href={isAuthenticated ? portalHref : "/sign-in"}
-                  onClick={closeMobileMenu}
+                  <Link href="/configurator" onClick={closeMobileMenu}>
+                    {ctas.design}
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="md"
+                  className="w-full justify-center border border-border/50 bg-background/70 px-6 text-base"
                 >
-                  {isAuthenticated ? portalLabel : ctas.signIn}
-                </Link>
-              </Button>
-              <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/40 bg-background/60 px-4 py-3">
-                <span className="text-xs font-semibold uppercase tracking-[0.26em] text-foreground/50">
-                  {SUBTITLE[language]}
-                </span>
-                <div className="flex items-center gap-2">
-                  <LanguageToggle />
-                  <ThemeToggle />
+                  <Link
+                    href={isAuthenticated ? portalHref : "/sign-in"}
+                    onClick={closeMobileMenu}
+                  >
+                    {isAuthenticated ? portalLabel : ctas.signIn}
+                  </Link>
+                </Button>
+                <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/40 bg-background/55 px-4 py-3">
+                  <span className="text-xs font-semibold uppercase tracking-[0.26em] text-foreground/50">
+                    {SUBTITLE[language]}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <LanguageToggle />
+                    <ThemeToggle />
+                  </div>
                 </div>
               </div>
             </div>
