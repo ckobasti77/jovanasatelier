@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { ModelDetail } from "@/components/models/model-detail";
 import { SiteFooter } from "@/components/site-footer";
@@ -27,7 +28,15 @@ export default async function ModelPage({
     <>
       <SiteHeader />
       <main className="mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-6xl flex-col gap-16 px-4 pb-28 pt-14 sm:gap-20 sm:px-6 sm:pb-32 sm:pt-20">
-        <ModelDetail modelId={model.id} />
+        <Suspense
+          fallback={
+            <div className="p-6 text-sm text-foreground/70">
+              Loading model...
+            </div>
+          }
+        >
+          <ModelDetail modelId={model.id} />
+        </Suspense>
       </main>
       <SiteFooter />
     </>
